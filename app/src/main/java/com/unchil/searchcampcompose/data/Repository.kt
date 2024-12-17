@@ -8,10 +8,8 @@ import androidx.room.withTransaction
 import com.google.android.gms.maps.model.LatLng
 import com.unchil.searchcampcompose.BuildConfig
 import com.unchil.searchcampcompose.api.GoCampingInterface
-import com.unchil.searchcampcompose.api.OpenWeatherInterface
 import com.unchil.searchcampcompose.api.RetrofitAdapter
 import com.unchil.searchcampcompose.api.SearchCampApi
-import com.unchil.searchcampcompose.api.VWorldInterface
 import com.unchil.searchcampcompose.db.SearchCampDB
 import com.unchil.searchcampcompose.db.entity.CURRENTWEATHER_TBL
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
@@ -25,7 +23,6 @@ import com.unchil.searchcampcompose.model.GoCampingResponseImage
 import com.unchil.searchcampcompose.model.GoCampingResponseStatus
 import com.unchil.searchcampcompose.model.GoCampingResponseStatusList
 import com.unchil.searchcampcompose.model.GoCampingSyncStatus
-import com.unchil.searchcampcompose.model.VWorldResponse
 import com.unchil.searchcampcompose.model.getDesc
 import com.unchil.searchcampcompose.model.toCURRENTWEATHER_TBL
 import com.unchil.searchcampcompose.shared.UnixTimeToString
@@ -407,68 +404,10 @@ class Repository {
         if( CollectTypeList.find {
                 it.name == serviceType.name}?.let { chkCollectTime(it) } == true  ) {
 
-            val service = RetrofitAdapter.create(service = VWorldInterface::class.java, url = VWORLD_URL)
-
-            val apiResponse: VWorldResponse = service.recvVWORLD(
-                apiKey = VWORLD_KEY,
-                request = request,
-                data = serviceType.name,
-                geomfilter = geomfilter,
-                size = size,
-                geometry = geometry,
-                crs = crs
-            )
-
-            when (serviceType) {
-                VWorldService.LT_C_ADSIDO_INFO -> {
-                    val resultList: MutableList<SiDo_TBL> = mutableListOf()
-                    apiResponse.response.result?.featureCollection?.features?.forEach {
-                        resultList.add(
-                            SiDo_TBL(
-                                ctprvn_cd = it.properties.ctprvn_cd ?: "",
-                                ctp_kor_nm = it.properties.ctp_kor_nm ?: "",
-                                ctp_eng_nm = it.properties.ctp_eng_nm ?: ""
-                            )
-                        )
-                    }
-
-
-                    database.withTransaction {
-                        database.sidoDao.trancate()
-                        database.sidoDao.insert_List(resultList)
-                        updateCollectTime(serviceType.name)
-
-                        /****
-                        Transaction 내에  동일한 테이블을 로드하는 Flow 를 넣으면  Transaction 이 종료 되지 않음 (무한 루프)
-                        getSiDoList()
-                         ***/
-                    }
-                }
-
-                VWorldService.LT_C_ADSIGG_INFO -> {
-                    val resultList: MutableList<SiGunGu_TBL> = mutableListOf()
-                    apiResponse.response.result?.featureCollection?.features?.forEach {
-                        resultList.add(
-                            SiGunGu_TBL(
-                                full_nm = it.properties.full_nm ?: "",
-                                sig_cd = it.properties.sig_cd ?: "",
-                                sig_kor_nm = it.properties.sig_kor_nm ?: "",
-                                sig_eng_nm = it.properties.sig_eng_nm ?: ""
-                            )
-                        )
-                    }
-                    database.withTransaction {
-                        database.sigunguDao.trancate()
-                        database.sigunguDao.insert_List(resultList)
-                        updateCollectTime(serviceType.name)
-                    }
-                }
-            }
-
             try {
-                val apiResponse = api.recvVWORLD(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
                 when (serviceType) {
                     VWorldService.LT_C_ADSIDO_INFO -> {
+                        val apiResponse = api.recvVWORLD_LT_C_ADSIDO_INFO(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
                         val resultList: MutableList<SiDo_TBL> = mutableListOf()
                         apiResponse.response.result?.featureCollection?.features?.forEach {
                             resultList.add(
@@ -494,6 +433,7 @@ class Repository {
                     }
 
                     VWorldService.LT_C_ADSIGG_INFO -> {
+                        val apiResponse = api.recvVWORLD_LT_C_ADSIGG_INFO(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
                         val resultList: MutableList<SiGunGu_TBL> = mutableListOf()
                         apiResponse.response.result?.featureCollection?.features?.forEach {
                             resultList.add(

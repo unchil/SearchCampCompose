@@ -3,7 +3,8 @@ package com.unchil.searchcampcompose.api
 import com.unchil.searchcampcompose.model.CurrentWeather
 import com.unchil.searchcampcompose.model.GoCampingResponse
 import com.unchil.searchcampcompose.model.GoCampingResponseImage
-import com.unchil.searchcampcompose.model.VWorldResponse
+import com.unchil.searchcampcompose.model.VWorldResponse_LT_C_ADSIDO_INFO
+import com.unchil.searchcampcompose.model.VWorldResponse_LT_C_ADSIGG_INFO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
@@ -18,7 +19,7 @@ import kotlinx.serialization.json.Json
 class SearchCampApi {
 
     private val OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5"
-    private val VWORLD_URL = "https://api.vworld.kr"
+    private val VWORLD_URL = "https://api.vworld.kr/req"
     private val GOCAMPING_URL = "https://apis.data.go.kr/B551011/GoCamping"
 
     private val httpClient = HttpClient {
@@ -51,7 +52,7 @@ class SearchCampApi {
         return httpClient.get(urlString = url).body()
     }
 
-    suspend fun recvVWORLD(
+    suspend fun recvVWORLD_LT_C_ADSIDO_INFO (
         apiKey:String,
         request:String,
         data:String,
@@ -59,10 +60,26 @@ class SearchCampApi {
         size:String,
         geometry:String,
         crs:String,
-    ): VWorldResponse {
-        val url = "${VWORLD_URL}/req?key=${apiKey}&request=${request}&data=${data}&crs=${crs}&geomfilter=${geomfilter}&geometry=${geometry}&size=${size}"
-        return httpClient.get(urlString = url).body()
+    ): VWorldResponse_LT_C_ADSIDO_INFO {
+        val url = "${VWORLD_URL}/data?key=${apiKey}&request=${request}&data=${data}&crs=${crs}&geomfilter=${geomfilter}&geometry=${geometry}&size=${size}"
+        val result = httpClient.get(urlString = url)
+        return result.body()
     }
+
+    suspend fun recvVWORLD_LT_C_ADSIGG_INFO (
+        apiKey:String,
+        request:String,
+        data:String,
+        geomfilter:String,
+        size:String,
+        geometry:String,
+        crs:String,
+    ): VWorldResponse_LT_C_ADSIGG_INFO {
+        val url = "${VWORLD_URL}/data?key=${apiKey}&request=${request}&data=${data}&crs=${crs}&geomfilter=${geomfilter}&geometry=${geometry}&size=${size}"
+        val result = httpClient.get(urlString = url)
+        return result.body()
+    }
+
 
     suspend fun getDefault(
         serviceKey:String,
