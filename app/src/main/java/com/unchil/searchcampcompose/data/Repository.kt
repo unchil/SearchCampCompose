@@ -10,6 +10,7 @@ import com.unchil.searchcampcompose.BuildConfig
 import com.unchil.searchcampcompose.api.GoCampingInterface
 import com.unchil.searchcampcompose.api.OpenWeatherInterface
 import com.unchil.searchcampcompose.api.RetrofitAdapter
+import com.unchil.searchcampcompose.api.SearchCampApi
 import com.unchil.searchcampcompose.api.VWorldInterface
 import com.unchil.searchcampcompose.db.SearchCampDB
 import com.unchil.searchcampcompose.db.entity.CURRENTWEATHER_TBL
@@ -148,6 +149,8 @@ fun GoCampingService.getPoint():String {
 class Repository {
 
     lateinit var database: SearchCampDB
+
+    private val api = SearchCampApi()
 
     val OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/"
 
@@ -351,28 +354,21 @@ class Repository {
     suspend fun getWeatherData(latitude: String, longitude: String){
 
         if( chkCollectTime(CollectType.WEATHER)  == true  ) {
+            try {
+                val apiResponse = api.getWeatherData(lat=latitude, lon=longitude, units="metric", appid= BuildConfig.OPENWEATHER_KEY)
+                _currentWeather.value = apiResponse.toCURRENTWEATHER_TBL()
+                database.withTransaction {
+                    database.currentWeatherDao.trancate()
+                    database.currentWeatherDao.insert(apiResponse.toCURRENTWEATHER_TBL())
+                }
+                updateCollectTime(CollectType.WEATHER.name)
 
-            val OPENWEATHER_KEY = BuildConfig.OPENWEATHER_KEY
-            val OPENWEATHER_UNITS = "metric"
-
-            val service = RetrofitAdapter.create( service = OpenWeatherInterface::class.java, url = OPENWEATHER_URL)
-
-            val apiResponse = service.getWeatherData(
-                latitude = latitude,
-                longitude = longitude,
-                units = OPENWEATHER_UNITS,
-                apiKey = OPENWEATHER_KEY
-            )
-
-            _currentWeather.value = apiResponse.toCURRENTWEATHER_TBL()
-
-            database.withTransaction {
-                database.currentWeatherDao.trancate()
-                database.currentWeatherDao.insert(apiResponse.toCURRENTWEATHER_TBL())
+            } catch (e:Exception){
+                val errMsg = e.localizedMessage
+                database.currentWeatherDao.select_Flow().collect{
+                    _currentWeather.value = it
+                }
             }
-
-            updateCollectTime(CollectType.WEATHER.name)
-
         }else {
             database.currentWeatherDao.select_Flow().collect{
                 _currentWeather.value = it
@@ -468,6 +464,59 @@ class Repository {
                     }
                 }
             }
+
+            try {
+                val apiResponse = api.recvVWORLD(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
+                when (serviceType) {
+                    VWorldService.LT_C_ADSIDO_INFO -> {
+                        val resultList: MutableList<SiDo_TBL> = mutableListOf()
+                        apiResponse.response.result?.featureCollection?.features?.forEach {
+                            resultList.add(
+                                SiDo_TBL(
+                                    ctprvn_cd = it.properties.ctprvn_cd ?: "",
+                                    ctp_kor_nm = it.properties.ctp_kor_nm ?: "",
+                                    ctp_eng_nm = it.properties.ctp_eng_nm ?: ""
+                                )
+                            )
+                        }
+
+
+                        database.withTransaction {
+                            database.sidoDao.trancate()
+                            database.sidoDao.insert_List(resultList)
+                            updateCollectTime(serviceType.name)
+
+                            /****
+                            Transaction 내에  동일한 테이블을 로드하는 Flow 를 넣으면  Transaction 이 종료 되지 않음 (무한 루프)
+                            getSiDoList()
+                             ***/
+                        }
+                    }
+
+                    VWorldService.LT_C_ADSIGG_INFO -> {
+                        val resultList: MutableList<SiGunGu_TBL> = mutableListOf()
+                        apiResponse.response.result?.featureCollection?.features?.forEach {
+                            resultList.add(
+                                SiGunGu_TBL(
+                                    full_nm = it.properties.full_nm ?: "",
+                                    sig_cd = it.properties.sig_cd ?: "",
+                                    sig_kor_nm = it.properties.sig_kor_nm ?: "",
+                                    sig_eng_nm = it.properties.sig_eng_nm ?: ""
+                                )
+                            )
+                        }
+                        database.withTransaction {
+                            database.sigunguDao.trancate()
+                            database.sigunguDao.insert_List(resultList)
+                            updateCollectTime(serviceType.name)
+                        }
+                    }
+                }
+            }catch (e:Exception){
+                val errMsg = e.localizedMessage
+            }
+
+
         }
 
     }
