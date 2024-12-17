@@ -1,7 +1,7 @@
 # SearchCamp
 
 
-#### Kotlin Compose RoomDatabase Flow Paging Retrofit Coil SpeechRecognizer GoogleMap OpenWeather
+#### Kotlin Compose RoomDatabase Flow Paging Ktor Coil SpeechRecognizer GoogleMap OpenWeather
 
 ## Description
 
