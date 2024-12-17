@@ -3,6 +3,7 @@ package com.unchil.searchcampcompose.model
 import com.google.gson.annotations.SerializedName
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.db.entity.NearCampSite_TBL
+import kotlinx.serialization.Serializable
 
 
 enum class GoCampingSyncStatus {
@@ -90,11 +91,12 @@ data class SiteDefaultData (
 }
 
 
-
+@Serializable
 data class GoCampingResponse(
     @SerializedName("response") var response:GoCampingRecvData?
 )
 
+@Serializable
 data class GoCampingRecvItem (
     @SerializedName("addr1") var addr1:String, //주소
     @SerializedName("addr2") var addr2:String, //주소상세
@@ -364,21 +366,22 @@ data class GoCampingRecvItem (
 
 
 
-
+@Serializable
 data class GoCampingRecvItems(
-    var item:Array<GoCampingRecvItem>
+    @SerializedName("item")var item:Array<GoCampingRecvItem>
 )
 
 
-
+@Serializable
 data class GoCampingRecvBody(
-    @SerializedName("items") var items:GoCampingRecvItems,
+    @SerializedName("items") var items:GoCampingRecvItems?,
     @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
     @SerializedName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
     @SerializedName("totalCount")  var totalCount:Int // 전체 데이터의 총 수
 )
 
 
+@Serializable
 data class GoCampingRecvData (
     @SerializedName("header") var header:GoCampingRecvHeader,
     @SerializedName("body") var body:GoCampingRecvBody
@@ -386,12 +389,14 @@ data class GoCampingRecvData (
 
 
 
-
+@Serializable
 data class GoCampingRecvHeader (
     @SerializedName("resultCode") var resultCode:String,  // API 호출 결과의 상태 코드
     @SerializedName("resultMsg") var resultMsg:String // API 호출 결과의 상태
 )
 
+
+@Serializable
 data class GoCampingRecvItemImage(
     @SerializedName("contentId") var contentId:String, // 콘텐츠 ID
     @SerializedName("createdtime") var createdtime:String, //등록일
@@ -400,10 +405,12 @@ data class GoCampingRecvItemImage(
     @SerializedName("serialnum") var serialnum:String //이미지 일련번호
 )
 
+@Serializable
 data class GoCampingRecvItemImages(
     @SerializedName("item") var item: Array<GoCampingRecvItemImage>
 )
 
+@Serializable
 data class GoCampingRecvBodyImage(
     @SerializedName("items") var items:GoCampingRecvItemImages?,
     @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
@@ -411,6 +418,7 @@ data class GoCampingRecvBodyImage(
     @SerializedName("totalCount") var totalCount:Int // 전체 데이터의 총 수
 )
 
+@Serializable
 data class GoCampingRecvBodyImageEmpty(
     @SerializedName("items") var items:String,
     @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
@@ -418,20 +426,24 @@ data class GoCampingRecvBodyImageEmpty(
     @SerializedName("totalCount") var totalCount:Int // 전체 데이터의 총 수
 )
 
+@Serializable
 data class GoCampingRecvDataImage(
     @SerializedName("header") var header:GoCampingRecvHeader,
     @SerializedName("body") var body:GoCampingRecvBodyImage
 )
 
+@Serializable
 data class  GoCampingRecvDataImageEmpty(
     @SerializedName("header") var header:GoCampingRecvHeader,
     @SerializedName("body") var body:GoCampingRecvBodyImageEmpty
 )
 
+@Serializable
 data class   GoCampingResponseImage(
     @SerializedName("response") var response:GoCampingRecvDataImage?
 )
 
+@Serializable
 data class    GoCampingResponseImageEmpty(
     @SerializedName("response") var response:GoCampingRecvDataImageEmpty
 )

@@ -7,8 +7,6 @@ import androidx.paging.PagingData
 import androidx.room.withTransaction
 import com.google.android.gms.maps.model.LatLng
 import com.unchil.searchcampcompose.BuildConfig
-import com.unchil.searchcampcompose.api.GoCampingInterface
-import com.unchil.searchcampcompose.api.RetrofitAdapter
 import com.unchil.searchcampcompose.api.SearchCampApi
 import com.unchil.searchcampcompose.db.SearchCampDB
 import com.unchil.searchcampcompose.db.entity.CURRENTWEATHER_TBL
@@ -28,13 +26,10 @@ import com.unchil.searchcampcompose.model.toCURRENTWEATHER_TBL
 import com.unchil.searchcampcompose.shared.UnixTimeToString
 import com.unchil.searchcampcompose.shared.yyyyMMdd
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.withContext
-import java.net.URLDecoder
 
 
 enum class AdministrativeDistrictSiDo {
@@ -149,23 +144,16 @@ class Repository {
 
     private val api = SearchCampApi()
 
-    val OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/"
-
-    val VWORLD_URL = "https://api.vworld.kr/req/"
-    val VWORLD_KEY = BuildConfig.WORLD_API_KEY
     val request = "getfeature"
     val geomfilter = "BOX(13663271.680031825,3894007.9689600193,14817776.555251127,4688953.0631258525)"
     val size = "1000"
     val geometry = "false"
     val crs = "EPSG:3857"
-
-    val GOCAMPING_URL = "https://apis.data.go.kr/B551011/GoCamping/"
     val numOfRows = "10000"
     val pageNo = "1"
     val MobileOS = "AND"
     val MobileApp = "campsite"
     val datatype = "json"
-
     val nearMaxRadius = "15000"  // 반경 15Km
 
     val currentLatLng: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
@@ -352,7 +340,12 @@ class Repository {
 
         if( chkCollectTime(CollectType.WEATHER)  == true  ) {
             try {
-                val apiResponse = api.getWeatherData(lat=latitude, lon=longitude, units="metric", appid= BuildConfig.OPENWEATHER_KEY)
+                val apiResponse = api.getWeatherData(
+                    lat=latitude,
+                    lon=longitude,
+                    units="metric",
+                    appid= BuildConfig.OPENWEATHER_KEY
+                )
                 _currentWeather.value = apiResponse.toCURRENTWEATHER_TBL()
                 database.withTransaction {
                     database.currentWeatherDao.trancate()
@@ -407,7 +400,15 @@ class Repository {
             try {
                 when (serviceType) {
                     VWorldService.LT_C_ADSIDO_INFO -> {
-                        val apiResponse = api.recvVWORLD_LT_C_ADSIDO_INFO(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
+                        val apiResponse = api.recvVWORLD_LT_C_ADSIDO_INFO(
+                            apiKey = BuildConfig.WORLD_API_KEY,
+                            request = request,
+                            data = serviceType.name,
+                            geomfilter = geomfilter,
+                            size = size,
+                            geometry = geometry,
+                            crs = crs
+                        )
                         val resultList: MutableList<SiDo_TBL> = mutableListOf()
                         apiResponse.response.result?.featureCollection?.features?.forEach {
                             resultList.add(
@@ -433,7 +434,15 @@ class Repository {
                     }
 
                     VWorldService.LT_C_ADSIGG_INFO -> {
-                        val apiResponse = api.recvVWORLD_LT_C_ADSIGG_INFO(VWORLD_KEY, request, serviceType.name, geomfilter, size, geometry, crs)
+                        val apiResponse = api.recvVWORLD_LT_C_ADSIGG_INFO(
+                            apiKey = BuildConfig.WORLD_API_KEY,
+                            request = request,
+                            data = serviceType.name,
+                            geomfilter = geomfilter,
+                            size = size,
+                            geometry = geometry,
+                            crs = crs
+                        )
                         val resultList: MutableList<SiGunGu_TBL> = mutableListOf()
                         apiResponse.response.result?.featureCollection?.features?.forEach {
                             resultList.add(
@@ -465,20 +474,10 @@ class Repository {
 
     suspend fun recvGoCampingDataImageList( contentId:String) {
 
-        val serviceKey  = withContext(Dispatchers.IO) {
-            URLDecoder.decode(BuildConfig.GOCAMPING_API_KEY, "UTF-8")
-        }
-
-        val service = RetrofitAdapter.create(
-            service = GoCampingInterface::class.java,
-            url = GOCAMPING_URL
-        )
 
         try {
-
-
-            val apiResponse = service.getImage(
-                serviceKey = serviceKey,
+            val apiResponse = api.getImage(
+                serviceKey = BuildConfig.GOCAMPING_API_KEY,
                 numOfRows = numOfRows,
                 pageNo = pageNo,
                 MobileOS = MobileOS,
@@ -488,7 +487,6 @@ class Repository {
             )
 
             val resultList: MutableList<SiteImage_TBL> = mutableListOf()
-
             apiResponse.response?.body?.items?.item?.forEach {
                 resultList.add(
                     SiteImage_TBL(
@@ -500,9 +498,8 @@ class Repository {
                     )
                 )
             }
-
-
             _recvSiteImageListState.value = SearchScreenViewModel.RecvSiteImageListState.Success(resultList)
+
 
         } catch (e : Exception){
 
@@ -531,20 +528,13 @@ class Repository {
         if( CollectTypeList.find {
                 it.name == serviceType.name}?.let { chkCollectTime(it) } == true  ) {
 
-            val serviceKey  = withContext(Dispatchers.IO) {
-                URLDecoder.decode(BuildConfig.GOCAMPING_API_KEY, "UTF-8")
-            }
-
-            val service = RetrofitAdapter.create(
-                service = GoCampingInterface::class.java,
-                url = GOCAMPING_URL
-            )
+            val serviceKey = BuildConfig.GOCAMPING_API_KEY
 
             try {
 
                 val apiResponse: Any = when (serviceType) {
                     GoCampingService.CAMPSITE -> {
-                        service.getDefault(
+                        api.getDefault(
                             serviceKey = serviceKey,
                             numOfRows = numOfRows,
                             pageNo = pageNo,
@@ -555,7 +545,7 @@ class Repository {
                     }
                     GoCampingService.NEARCAMPSITE -> {
                         if ( !mapX.isNullOrEmpty() && !mapY.isNullOrEmpty()) {
-                            service.getLocation(
+                            api.getLocation(
                                 serviceKey = serviceKey,
                                 numOfRows = numOfRows,
                                 pageNo = pageNo,
@@ -570,7 +560,7 @@ class Repository {
 
                     }
                     GoCampingService.SYNC -> {
-                        service.getSync(
+                        api.getSync(
                             serviceKey = serviceKey,
                             numOfRows = numOfRows,
                             pageNo = pageNo,
@@ -582,7 +572,7 @@ class Repository {
                     }
                     GoCampingService.SITEIMAGE -> {
                         if (!contentId.isNullOrEmpty()) {
-                            service.getImage(
+                            api.getImage(
                                 serviceKey = serviceKey,
                                 numOfRows = numOfRows,
                                 pageNo = pageNo,
@@ -596,7 +586,7 @@ class Repository {
                     }
                     GoCampingService.SEARCH -> {
                         if(!keyword.isNullOrEmpty()){
-                            service.getSearch(
+                            api.getSearch(
                                 serviceKey = BuildConfig.GOCAMPING_API_KEY,
                                 numOfRows = numOfRows ,
                                 pageNo = pageNo,
@@ -624,6 +614,10 @@ class Repository {
                         }
                     }
                 }
+
+
+
+
 
                 when (resultStatus) {
 

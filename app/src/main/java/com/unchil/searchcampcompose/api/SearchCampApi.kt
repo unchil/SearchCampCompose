@@ -89,7 +89,7 @@ class SearchCampApi {
         MobileApp:String,
         _type:String
     ): GoCampingResponse {
-        val url = "${GOCAMPING_URL}/req?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}"
+        val url = "${GOCAMPING_URL}/basedList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}"
         return httpClient.get(urlString = url).body()
     }
 
@@ -104,7 +104,7 @@ class SearchCampApi {
         mapY:String,
         radius:String
     ):GoCampingResponse{
-        val url = "${GOCAMPING_URL}/req?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&mapX=${mapX}&mapY=${mapY}&radius=${radius}"
+        val url = "${GOCAMPING_URL}/locationBasedList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&mapX=${mapX}&mapY=${mapY}&radius=${radius}"
         return httpClient.get(urlString = url).body()
     }
 
@@ -117,7 +117,7 @@ class SearchCampApi {
         _type:String,
         keyword:String,
     ):GoCampingResponse{
-        val url = "${GOCAMPING_URL}/req?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&keyword=${keyword}"
+        val url = "${GOCAMPING_URL}/searchList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&keyword=${keyword}"
         return httpClient.get(urlString = url).body()
     }
 
@@ -130,7 +130,7 @@ class SearchCampApi {
         _type:String,
         syncModTime:String,
     ):GoCampingResponse{
-        val url = "${GOCAMPING_URL}/req?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&syncModTime=${syncModTime}"
+        val url = "${GOCAMPING_URL}/basedSyncList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&syncModTime=${syncModTime}"
         return httpClient.get(urlString = url).body()
     }
 
@@ -143,7 +143,7 @@ class SearchCampApi {
         _type:String,
         contentId:String,
     ): GoCampingResponseImage {
-        val url = "${GOCAMPING_URL}/req?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&contentId=${contentId}"
+        val url = "${GOCAMPING_URL}/imageList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&contentId=${contentId}"
         return httpClient.get(urlString = url).body()
     }
 
