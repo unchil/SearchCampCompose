@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.unchil.searchcampcompose"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -99,6 +99,7 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.material)
     implementation(libs.androidx.material.icons)
+    implementation(libs.google.code.gson)
 }
 
 
