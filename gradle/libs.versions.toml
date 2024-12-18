@@ -21,10 +21,9 @@ play-services-location= "21.3.0"
 play-services-maps = "19.0.0"
 google-maps-utils = "3.5.2"
 google-maps-compose = "2.11.2"
-retrofit2 = "2.9.0"
 navigation = "2.8.5"
-okhttp3 = "4.9.0"
-gson = "2.11.0"
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,10 +49,6 @@ androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", 
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat"}
 google-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist"}
-squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2"}
-squareup-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2"}
-squareup-retrofit-mock = { group = "com.squareup.retrofit2", name = "retrofit-mock", version.ref = "retrofit2"}
-squareup-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3"}
 google-android-gms-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location"}
 google-android-gms-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps"}
 google-maps-utils = { group = "com.google.maps.android", name = "android-maps-utils", version.ref = "google-maps-utils"}
@@ -62,7 +57,7 @@ google-maps-compose-widgets = { group = "com.google.maps.android", name = "maps-
 google-maps-compose-util = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "google-maps-compose"}
 google-accompanist-navigation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist"}
 google-accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist"}
-google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson"}
+
 
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil3" }
 coil-core = { group = "io.coil-kt.coil3", name = "coil-core", version.ref = "coil3" }

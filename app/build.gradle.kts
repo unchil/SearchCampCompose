@@ -73,10 +73,6 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.accompanist.permissions)
-    implementation(libs.squareup.retrofit)
-    implementation(libs.squareup.retrofit.gson)
-    implementation(libs.squareup.retrofit.mock)
-    implementation(libs.squareup.okhttp.logging)
     implementation(libs.google.android.gms.location)
     implementation(libs.google.android.gms.maps)
     implementation(libs.google.maps.utils)
@@ -99,7 +95,7 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.material)
     implementation(libs.androidx.material.icons)
-    implementation(libs.google.code.gson)
+
 }
 
 

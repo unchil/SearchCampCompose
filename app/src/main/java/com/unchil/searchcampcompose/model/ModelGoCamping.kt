@@ -1,8 +1,8 @@
 package com.unchil.searchcampcompose.model
 
-import com.google.gson.annotations.SerializedName
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.db.entity.NearCampSite_TBL
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
@@ -93,94 +93,94 @@ data class SiteDefaultData (
 
 @Serializable
 data class GoCampingResponse(
-    @SerializedName("response") var response:GoCampingRecvData?
+    @SerialName("response") var response:GoCampingRecvData?
 )
 
 @Serializable
 data class GoCampingRecvItem (
-    @SerializedName("addr1") var addr1:String, //주소
-    @SerializedName("addr2") var addr2:String, //주소상세
-    @SerializedName("allar") var allar:String, //전체면적
-    @SerializedName("animalCmgCl") var animalCmgCl:String, //애완동물출입
-    @SerializedName("autoSiteCo") var autoSiteCo:String, //주요시설 자동차야영장
-    @SerializedName("bizrno") var bizrno:String, //사업자번호
-    @SerializedName("brazierCl") var brazierCl:String, //화로대
-    @SerializedName("caravAcmpnyAt") var caravAcmpnyAt:String, //개인 카라반 동반 여부(Y:사용, N:미사용)
-    @SerializedName("caravInnerFclty") var caravInnerFclty:String, //카라반 - 내부시설
-    @SerializedName("caravSiteCo") var caravSiteCo:String, //주요시설 카라반
-    @SerializedName("clturEvent") var clturEvent:String, //자체문화행사명
-    @SerializedName("clturEventAt") var clturEventAt:String, //자체문화행사 여부(Y:사용, N:미사용)
-    @SerializedName("contentId") var contentId:String, //콘텐츠 ID
-    @SerializedName("createdtime") var createdtime:String, //등록일
-    @SerializedName("direction") var direction:String, //오시는 길 컨텐츠
-    @SerializedName("doNm") var doNm:String, //도
-    @SerializedName("eqpmnLendCl") var eqpmnLendCl:String, //캠핑장비대여
-    @SerializedName("exprnProgrm") var exprnProgrm:String, //체험프로그램명
-    @SerializedName("exprnProgrmAt") var exprnProgrmAt:String, //체험프로그램 여부(Y:사용, N:미사용)
-    @SerializedName("extshrCo") var extshrCo:String, //소화기 개수
-    @SerializedName("facltDivNm") var facltDivNm:String, //사업주체.구분
-    @SerializedName("facltNm") var facltNm:String, //야영장명
-    @SerializedName("featureNm") var featureNm:String, //특징
-    @SerializedName("fireSensorCo") var fireSensorCo:String, //화재감지기 개수
-    @SerializedName("firstImageUrl") var firstImageUrl:String, //대표이미지
-    @SerializedName("frprvtSandCo") var frprvtSandCo:String, //방화사 개수
-    @SerializedName("frprvtWrppCo") var frprvtWrppCo:String, //방화수 개수
-    @SerializedName("glampInnerFclty") var glampInnerFclty:String, //글램핑 - 내부시설
-    @SerializedName("glampSiteCo") var glampSiteCo:String, //주요시설 글램핑
-    @SerializedName("gnrlSiteCo") var gnrlSiteCo:String, //주요시설 일반야영장
-    @SerializedName("homepage") var homepage:String, //홈페이지
-    @SerializedName("hvofBgnde") var hvofBgnde:String, //휴장기간.휴무기간 시작일
-    @SerializedName("hvofEnddle") var hvofEnddle:String, //휴장기간.휴무기간 종료일
-    @SerializedName("induty") var induty:String, //업종
-    @SerializedName("indvdlCaravSiteCo") var indvdlCaravSiteCo:String, //주요시설 개인 카라반
-    @SerializedName("insrncAt") var insrncAt:String, //영업배상책임보험 가입여부(Y:사용, N:미사용)
-    @SerializedName("intro") var intro:String, //소개
-    @SerializedName("lctCl") var lctCl:String, //입지구분
-    @SerializedName("lineIntro") var lineIntro:String, //한줄소개
-    @SerializedName("manageNmpr") var manageNmpr:String, //상주관리인원
-    @SerializedName("manageSttus") var manageSttus:String, //운영상태.관리상태
-    @SerializedName("mangeDivNm") var mangeDivNm:String, //운영주체.관리주체 (직영, 위탁)
-    @SerializedName("mapX") var mapX:String, //경도(X)
-    @SerializedName("mapY") var mapY:String, //위도(Y)
-    @SerializedName("mgcDiv") var mgcDiv:String, //운영기관.관리기관
-    @SerializedName("modifiedtime") var modifiedtime:String, //수정일
-    @SerializedName("operDeCl") var operDeCl:String, //운영일
-    @SerializedName("operPdCl") var operPdCl:String, //운영기간
-    @SerializedName("posblFcltyCl") var posblFcltyCl:String, //주변이용가능시설
-    @SerializedName("posblFcltyEtc") var posblFcltyEtc:String, //주변이용가능시설 기타
-    @SerializedName("prmisnDe") var prmisnDe:String, //인허가일자
-    @SerializedName("resveCl") var resveCl:String, //예약 구분
-    @SerializedName("resveUrl") var resveUrl:String, //예약 페이지
-    @SerializedName("sbrsCl") var sbrsCl:String, //부대시설
-    @SerializedName("sbrsEtc") var sbrsEtc:String, //부대시설 기타
-    @SerializedName("sigunguNm") var sigunguNm:String, //시군구
-    @SerializedName("siteBottomCl1") var siteBottomCl1:String, //잔디
-    @SerializedName("siteBottomCl2") var siteBottomCl2:String, //파쇄석
-    @SerializedName("siteBottomCl3") var siteBottomCl3:String, //테크
-    @SerializedName("siteBottomCl4") var siteBottomCl4:String, //자갈
-    @SerializedName("siteBottomCl5") var siteBottomCl5:String, //맨흙
-    @SerializedName("sitedStnc") var sitedStnc:String, //사이트간 거리
-    @SerializedName("siteMg1Co") var siteMg1Co:String, //사이트 크기1 수량
-    @SerializedName("siteMg1Vrticl") var siteMg1Vrticl:String, //사이트 크기1 세로
-    @SerializedName("siteMg1Width") var siteMg1Width:String, //사이트 크기1 가로
-    @SerializedName("siteMg2Co") var siteMg2Co:String, //사이트 크기2 수량
-    @SerializedName("siteMg2Vrticl") var siteMg2Vrticl:String, //사이트 크기2 세로
-    @SerializedName("siteMg2Width") var siteMg2Width:String, //사이트 크기2 가로
-    @SerializedName("siteMg3Co") var siteMg3Co:String, //사이트 크기3 수량
-    @SerializedName("siteMg3Vrticl") var siteMg3Vrticl:String, //사이트 크기3 세로
-    @SerializedName("siteMg3Width") var siteMg3Width:String, //사이트 크기3 가로
-    @SerializedName("swrmCo") var swrmCo:String, //샤워실 개수
-    @SerializedName("tel") var tel:String, //전화
-    @SerializedName("themaEnvrnCl") var themaEnvrnCl:String, //테마환경
-    @SerializedName("toiletCo") var toiletCo:String, //화장실 개수
-    @SerializedName("tooltip") var tooltip:String, //툴팁
-    @SerializedName("tourEraCl") var tourEraCl:String, //여행시기
-    @SerializedName("trlerAcmpnyAt") var trlerAcmpnyAt:String, //개인 트레일러 동반 여부(Y:사용, N:미사용)
-    @SerializedName("trsagntNo") var trsagntNo:String, //관광사업자번호
-    @SerializedName("wtrplCo") var wtrplCo:String, //개수대 개수
-    @SerializedName("zipcode") var zipcode:String, //우편번호
+    @SerialName("addr1") var addr1:String, //주소
+    @SerialName("addr2") var addr2:String, //주소상세
+    @SerialName("allar") var allar:String, //전체면적
+    @SerialName("animalCmgCl") var animalCmgCl:String, //애완동물출입
+    @SerialName("autoSiteCo") var autoSiteCo:String, //주요시설 자동차야영장
+    @SerialName("bizrno") var bizrno:String, //사업자번호
+    @SerialName("brazierCl") var brazierCl:String, //화로대
+    @SerialName("caravAcmpnyAt") var caravAcmpnyAt:String, //개인 카라반 동반 여부(Y:사용, N:미사용)
+    @SerialName("caravInnerFclty") var caravInnerFclty:String, //카라반 - 내부시설
+    @SerialName("caravSiteCo") var caravSiteCo:String, //주요시설 카라반
+    @SerialName("clturEvent") var clturEvent:String, //자체문화행사명
+    @SerialName("clturEventAt") var clturEventAt:String, //자체문화행사 여부(Y:사용, N:미사용)
+    @SerialName("contentId") var contentId:String, //콘텐츠 ID
+    @SerialName("createdtime") var createdtime:String, //등록일
+    @SerialName("direction") var direction:String, //오시는 길 컨텐츠
+    @SerialName("doNm") var doNm:String, //도
+    @SerialName("eqpmnLendCl") var eqpmnLendCl:String, //캠핑장비대여
+    @SerialName("exprnProgrm") var exprnProgrm:String, //체험프로그램명
+    @SerialName("exprnProgrmAt") var exprnProgrmAt:String, //체험프로그램 여부(Y:사용, N:미사용)
+    @SerialName("extshrCo") var extshrCo:String, //소화기 개수
+    @SerialName("facltDivNm") var facltDivNm:String, //사업주체.구분
+    @SerialName("facltNm") var facltNm:String, //야영장명
+    @SerialName("featureNm") var featureNm:String, //특징
+    @SerialName("fireSensorCo") var fireSensorCo:String, //화재감지기 개수
+    @SerialName("firstImageUrl") var firstImageUrl:String, //대표이미지
+    @SerialName("frprvtSandCo") var frprvtSandCo:String, //방화사 개수
+    @SerialName("frprvtWrppCo") var frprvtWrppCo:String, //방화수 개수
+    @SerialName("glampInnerFclty") var glampInnerFclty:String, //글램핑 - 내부시설
+    @SerialName("glampSiteCo") var glampSiteCo:String, //주요시설 글램핑
+    @SerialName("gnrlSiteCo") var gnrlSiteCo:String, //주요시설 일반야영장
+    @SerialName("homepage") var homepage:String, //홈페이지
+    @SerialName("hvofBgnde") var hvofBgnde:String, //휴장기간.휴무기간 시작일
+    @SerialName("hvofEnddle") var hvofEnddle:String, //휴장기간.휴무기간 종료일
+    @SerialName("induty") var induty:String, //업종
+    @SerialName("indvdlCaravSiteCo") var indvdlCaravSiteCo:String, //주요시설 개인 카라반
+    @SerialName("insrncAt") var insrncAt:String, //영업배상책임보험 가입여부(Y:사용, N:미사용)
+    @SerialName("intro") var intro:String, //소개
+    @SerialName("lctCl") var lctCl:String, //입지구분
+    @SerialName("lineIntro") var lineIntro:String, //한줄소개
+    @SerialName("manageNmpr") var manageNmpr:String, //상주관리인원
+    @SerialName("manageSttus") var manageSttus:String, //운영상태.관리상태
+    @SerialName("mangeDivNm") var mangeDivNm:String, //운영주체.관리주체 (직영, 위탁)
+    @SerialName("mapX") var mapX:String, //경도(X)
+    @SerialName("mapY") var mapY:String, //위도(Y)
+    @SerialName("mgcDiv") var mgcDiv:String, //운영기관.관리기관
+    @SerialName("modifiedtime") var modifiedtime:String, //수정일
+    @SerialName("operDeCl") var operDeCl:String, //운영일
+    @SerialName("operPdCl") var operPdCl:String, //운영기간
+    @SerialName("posblFcltyCl") var posblFcltyCl:String, //주변이용가능시설
+    @SerialName("posblFcltyEtc") var posblFcltyEtc:String, //주변이용가능시설 기타
+    @SerialName("prmisnDe") var prmisnDe:String, //인허가일자
+    @SerialName("resveCl") var resveCl:String, //예약 구분
+    @SerialName("resveUrl") var resveUrl:String, //예약 페이지
+    @SerialName("sbrsCl") var sbrsCl:String, //부대시설
+    @SerialName("sbrsEtc") var sbrsEtc:String, //부대시설 기타
+    @SerialName("sigunguNm") var sigunguNm:String, //시군구
+    @SerialName("siteBottomCl1") var siteBottomCl1:String, //잔디
+    @SerialName("siteBottomCl2") var siteBottomCl2:String, //파쇄석
+    @SerialName("siteBottomCl3") var siteBottomCl3:String, //테크
+    @SerialName("siteBottomCl4") var siteBottomCl4:String, //자갈
+    @SerialName("siteBottomCl5") var siteBottomCl5:String, //맨흙
+    @SerialName("sitedStnc") var sitedStnc:String, //사이트간 거리
+    @SerialName("siteMg1Co") var siteMg1Co:String, //사이트 크기1 수량
+    @SerialName("siteMg1Vrticl") var siteMg1Vrticl:String, //사이트 크기1 세로
+    @SerialName("siteMg1Width") var siteMg1Width:String, //사이트 크기1 가로
+    @SerialName("siteMg2Co") var siteMg2Co:String, //사이트 크기2 수량
+    @SerialName("siteMg2Vrticl") var siteMg2Vrticl:String, //사이트 크기2 세로
+    @SerialName("siteMg2Width") var siteMg2Width:String, //사이트 크기2 가로
+    @SerialName("siteMg3Co") var siteMg3Co:String, //사이트 크기3 수량
+    @SerialName("siteMg3Vrticl") var siteMg3Vrticl:String, //사이트 크기3 세로
+    @SerialName("siteMg3Width") var siteMg3Width:String, //사이트 크기3 가로
+    @SerialName("swrmCo") var swrmCo:String, //샤워실 개수
+    @SerialName("tel") var tel:String, //전화
+    @SerialName("themaEnvrnCl") var themaEnvrnCl:String, //테마환경
+    @SerialName("toiletCo") var toiletCo:String, //화장실 개수
+    @SerialName("tooltip") var tooltip:String, //툴팁
+    @SerialName("tourEraCl") var tourEraCl:String, //여행시기
+    @SerialName("trlerAcmpnyAt") var trlerAcmpnyAt:String, //개인 트레일러 동반 여부(Y:사용, N:미사용)
+    @SerialName("trsagntNo") var trsagntNo:String, //관광사업자번호
+    @SerialName("wtrplCo") var wtrplCo:String, //개수대 개수
+    @SerialName("zipcode") var zipcode:String, //우편번호
 
-    @SerializedName("syncStatus") var syncStatus:String? //콘덴츠 상태
+    @SerialName("syncStatus") var syncStatus:String? //콘덴츠 상태
 
 
 ){
@@ -368,84 +368,84 @@ data class GoCampingRecvItem (
 
 @Serializable
 data class GoCampingRecvItems(
-    @SerializedName("item")var item:Array<GoCampingRecvItem>
+    @SerialName("item")var item:Array<GoCampingRecvItem>
 )
 
 
 @Serializable
 data class GoCampingRecvBody(
-    @SerializedName("items") var items:GoCampingRecvItems?,
-    @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
-    @SerializedName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
-    @SerializedName("totalCount")  var totalCount:Int // 전체 데이터의 총 수
+    @SerialName("items") var items:GoCampingRecvItems?,
+    @SerialName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
+    @SerialName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
+    @SerialName("totalCount")  var totalCount:Int // 전체 데이터의 총 수
 )
 
 
 @Serializable
 data class GoCampingRecvData (
-    @SerializedName("header") var header:GoCampingRecvHeader,
-    @SerializedName("body") var body:GoCampingRecvBody
+    @SerialName("header") var header:GoCampingRecvHeader,
+    @SerialName("body") var body:GoCampingRecvBody
 )
 
 
 
 @Serializable
 data class GoCampingRecvHeader (
-    @SerializedName("resultCode") var resultCode:String,  // API 호출 결과의 상태 코드
-    @SerializedName("resultMsg") var resultMsg:String // API 호출 결과의 상태
+    @SerialName("resultCode") var resultCode:String,  // API 호출 결과의 상태 코드
+    @SerialName("resultMsg") var resultMsg:String // API 호출 결과의 상태
 )
 
 
 @Serializable
 data class GoCampingRecvItemImage(
-    @SerializedName("contentId") var contentId:String, // 콘텐츠 ID
-    @SerializedName("createdtime") var createdtime:String, //등록일
-    @SerializedName("imageUrl") var imageUrl:String, //이미지 URL
-    @SerializedName("modifiedtime") var modifiedtime:String, // 수정일
-    @SerializedName("serialnum") var serialnum:String //이미지 일련번호
+    @SerialName("contentId") var contentId:String, // 콘텐츠 ID
+    @SerialName("createdtime") var createdtime:String, //등록일
+    @SerialName("imageUrl") var imageUrl:String, //이미지 URL
+    @SerialName("modifiedtime") var modifiedtime:String, // 수정일
+    @SerialName("serialnum") var serialnum:String //이미지 일련번호
 )
 
 @Serializable
 data class GoCampingRecvItemImages(
-    @SerializedName("item") var item: Array<GoCampingRecvItemImage>
+    @SerialName("item") var item: Array<GoCampingRecvItemImage>
 )
 
 @Serializable
 data class GoCampingRecvBodyImage(
-    @SerializedName("items") var items:GoCampingRecvItemImages?,
-    @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
-    @SerializedName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
-    @SerializedName("totalCount") var totalCount:Int // 전체 데이터의 총 수
+    @SerialName("items") var items:GoCampingRecvItemImages?,
+    @SerialName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
+    @SerialName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
+    @SerialName("totalCount") var totalCount:Int // 전체 데이터의 총 수
 )
 
 @Serializable
 data class GoCampingRecvBodyImageEmpty(
-    @SerializedName("items") var items:String,
-    @SerializedName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
-    @SerializedName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
-    @SerializedName("totalCount") var totalCount:Int // 전체 데이터의 총 수
+    @SerialName("items") var items:String,
+    @SerialName("numOfRows") var numOfRows:Int, // 한 페이지의 결과 수
+    @SerialName("pageNo") var pageNo:Int, // 현재 조회된 데이터의 페이지 번호
+    @SerialName("totalCount") var totalCount:Int // 전체 데이터의 총 수
 )
 
 @Serializable
 data class GoCampingRecvDataImage(
-    @SerializedName("header") var header:GoCampingRecvHeader,
-    @SerializedName("body") var body:GoCampingRecvBodyImage
+    @SerialName("header") var header:GoCampingRecvHeader,
+    @SerialName("body") var body:GoCampingRecvBodyImage
 )
 
 @Serializable
 data class  GoCampingRecvDataImageEmpty(
-    @SerializedName("header") var header:GoCampingRecvHeader,
-    @SerializedName("body") var body:GoCampingRecvBodyImageEmpty
+    @SerialName("header") var header:GoCampingRecvHeader,
+    @SerialName("body") var body:GoCampingRecvBodyImageEmpty
 )
 
 @Serializable
 data class   GoCampingResponseImage(
-    @SerializedName("response") var response:GoCampingRecvDataImage?
+    @SerialName("response") var response:GoCampingRecvDataImage?
 )
 
 @Serializable
 data class    GoCampingResponseImageEmpty(
-    @SerializedName("response") var response:GoCampingRecvDataImageEmpty
+    @SerialName("response") var response:GoCampingRecvDataImageEmpty
 )
 
 
