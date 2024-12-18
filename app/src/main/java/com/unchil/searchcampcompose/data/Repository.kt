@@ -516,7 +516,6 @@ class Repository {
 
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun recvGoCampingData(
         serviceType:GoCampingService,
         mapX:String? = null,

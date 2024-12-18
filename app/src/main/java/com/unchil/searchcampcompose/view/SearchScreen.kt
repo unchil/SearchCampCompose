@@ -51,13 +51,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
-import com.unchil.searchcampcompose.ChkNetWork
 import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.data.RepositoryProvider
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
 import com.unchil.searchcampcompose.model.SnackBarChannelType
 import com.unchil.searchcampcompose.model.snackbarChannelList
+import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.view.CheckPermission
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
@@ -119,7 +119,7 @@ fun SearchScreen(){
                 administrativeDistrictSiDoCode = administrativeDistrictSiDoCode,
                 administrativeDistrictSiGunGu = administrativeDistrictSiGunGu,
                 searchTitle = searchTitle.value
-                )
+            )
         }
 
         val fusedLocationProviderClient = remember {
@@ -307,10 +307,8 @@ fun SearchScreen(){
             backLayerBackgroundColor = Color.Transparent,
             frontLayerShape =  ShapeDefaults.Medium,
             frontLayerBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
-
             snackbarHost = {
                 SnackbarHost(hostState = snackBarHostState) {
-
                     Snackbar(
                         snackbarData = it,
                         modifier = Modifier,
@@ -319,8 +317,6 @@ fun SearchScreen(){
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         dismissActionContentColor = MaterialTheme.colorScheme.tertiary
                     )
-
-
                 }
             },
             appBar = {

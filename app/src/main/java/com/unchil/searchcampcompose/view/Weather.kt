@@ -40,7 +40,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
-import com.unchil.searchcampcompose.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.db.entity.CURRENTWEATHER_TBL

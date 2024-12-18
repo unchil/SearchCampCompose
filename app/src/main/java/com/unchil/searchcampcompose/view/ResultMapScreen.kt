@@ -72,13 +72,13 @@ import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.widgets.ScaleBar
-import com.unchil.searchcampcompose.ChkNetWork
 import com.unchil.searchcampcompose.LocalUsableHaptic
 import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.model.SiteDefaultData
+import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.chromeIntent
 import com.unchil.searchcampcompose.shared.view.CheckPermission
