@@ -3,11 +3,11 @@ package com.unchil.searchcampcompose.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.data.Repository
-import com.unchil.searchcampcompose.data.VWorldService
 import com.unchil.searchcampcompose.db.entity.SiDo_TBL
 import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
+import com.unchil.searchcampcompose.model.GoCampingService
+import com.unchil.searchcampcompose.model.VWorldService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

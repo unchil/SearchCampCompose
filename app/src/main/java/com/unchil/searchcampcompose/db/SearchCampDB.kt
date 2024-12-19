@@ -8,7 +8,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.unchil.searchcampcompose.data.CollectTypeList
 import com.unchil.searchcampcompose.db.dao.CampSite_Dao
 import com.unchil.searchcampcompose.db.dao.CollectTime_Dao
 import com.unchil.searchcampcompose.db.dao.CurrentWeather_Dao
@@ -23,6 +22,7 @@ import com.unchil.searchcampcompose.db.entity.NearCampSite_TBL
 import com.unchil.searchcampcompose.db.entity.SiDo_TBL
 import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
 import com.unchil.searchcampcompose.db.entity.SiteImage_TBL
+import com.unchil.searchcampcompose.model.CollectTypeList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

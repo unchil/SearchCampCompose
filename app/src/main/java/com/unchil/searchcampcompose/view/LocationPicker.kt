@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.unchil.searchcampcompose.LocalUsableDarkMode
 import com.unchil.searchcampcompose.LocalUsableHaptic
-import com.unchil.searchcampcompose.data.VWorldService
 import com.unchil.searchcampcompose.db.entity.SiDo_TBL
 import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
+import com.unchil.searchcampcompose.model.VWorldService
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -51,7 +51,7 @@ fun AdministrativeDistrictPicker(
     brushType:Brush? = null,
     onSelectedHandler:(VWorldService, String, String)-> Unit,
 
-){
+    ){
 
     val isUsableDarkMode = LocalUsableDarkMode.current
 

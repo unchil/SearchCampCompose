@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.data.Repository
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.db.entity.SiteImage_TBL
 import com.unchil.searchcampcompose.model.GoCampingResponseStatus
+import com.unchil.searchcampcompose.model.GoCampingService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

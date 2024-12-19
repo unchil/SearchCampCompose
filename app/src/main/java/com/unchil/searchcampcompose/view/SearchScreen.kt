@@ -52,9 +52,9 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import com.unchil.searchcampcompose.R
-import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.data.RepositoryProvider
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
+import com.unchil.searchcampcompose.model.GoCampingService
 import com.unchil.searchcampcompose.model.SnackBarChannelType
 import com.unchil.searchcampcompose.model.snackbarChannelList
 import com.unchil.searchcampcompose.shared.ChkNetWork

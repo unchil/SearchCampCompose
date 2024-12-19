@@ -64,10 +64,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.unchil.searchcampcompose.data.RepositoryProvider
-import com.unchil.searchcampcompose.data.VWorldService
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
 import com.unchil.searchcampcompose.db.SearchCampDB
 import com.unchil.searchcampcompose.db.entity.SiDo_TBL
+import com.unchil.searchcampcompose.model.VWorldService
 import com.unchil.searchcampcompose.shared.PermissionsManager
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.recognizerIntent

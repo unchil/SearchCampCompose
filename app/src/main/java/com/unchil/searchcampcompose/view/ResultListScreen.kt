@@ -67,8 +67,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.unchil.searchcampcompose.LocalUsableHaptic
 import com.unchil.searchcampcompose.R
-import com.unchil.searchcampcompose.data.GoCampingService
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
+import com.unchil.searchcampcompose.model.GoCampingService
 import com.unchil.searchcampcompose.model.SiteDefaultData
 import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
@@ -80,16 +80,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+
 @Composable
 fun UpButton(
     modifier:Modifier,
-    listState: LazyListState
+    isPortrait:Boolean,
+    listState:Any
 ){
-
 
     val showButton by remember {
         derivedStateOf {
-            listState.firstVisibleItemIndex > 0
+            if (isPortrait) {
+                ( listState as LazyListState).firstVisibleItemIndex > 0
+            } else {
+                ( listState as LazyGridState).firstVisibleItemIndex > 0
+            }
         }
     }
 
@@ -112,7 +117,11 @@ fun UpButton(
             elevation =  FloatingActionButtonDefaults.elevation(defaultElevation = 2.dp),
             onClick = {
                 coroutineScope.launch {
-                    listState.animateScrollToItem(0)
+                    if (isPortrait) {
+                        ( listState as LazyListState).animateScrollToItem(0)
+                    } else {
+                        ( listState as LazyGridState).animateScrollToItem(0)
+                    }
                     hapticProcessing()
                 }
             }
@@ -126,56 +135,10 @@ fun UpButton(
 
         }
     }
+
 }
 
 
-@Composable
-fun UpButtonGrid(
-    modifier:Modifier,
-    listState: LazyGridState
-){
-
-
-    val showButton by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0
-        }
-    }
-
-
-    val isUsableHaptic = LocalUsableHaptic.current
-    val hapticFeedback = LocalHapticFeedback.current
-    val coroutineScope = rememberCoroutineScope()
-
-    fun hapticProcessing(){
-        if(isUsableHaptic){
-            coroutineScope.launch {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-        }
-    }
-
-    if( showButton) {
-        FloatingActionButton(
-            modifier = Modifier.then(modifier),
-            elevation =  FloatingActionButtonDefaults.elevation(defaultElevation = 2.dp),
-            onClick = {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(0)
-                    hapticProcessing()
-                }
-            }
-        ) {
-            Icon(
-                modifier = Modifier.scale(1f),
-                imageVector = Icons.Outlined.Publish,
-                contentDescription = "Up",
-
-                )
-
-        }
-    }
-}
 
 @Composable
 fun SearchingProgressIndicator(
@@ -558,21 +521,15 @@ fun ResultListScreen(
                             }
                         }
 
-                        if (isPortrait) {
-                            UpButton(
-                                modifier = Modifier
-                                    .padding(end = 10.dp, bottom = 30.dp)
-                                    .align(Alignment.BottomEnd),
-                                listState = lazyListState
-                            )
-                        } else {
-                            UpButtonGrid(
-                                modifier = Modifier
-                                    .padding(end = 10.dp, bottom = 10.dp)
-                                    .align(Alignment.BottomEnd),
-                                listState = lazyGridState
-                            )
-                        }
+                        UpButton(
+                            modifier = Modifier
+                                .padding(end = 10.dp, bottom = 10.dp)
+                                .align(Alignment.BottomEnd),
+                            isPortrait= isPortrait,
+                            listState = if(isPortrait) lazyListState else lazyGridState
+                        )
+
+
 
 
                         if(campSiteStream.itemCount == 0) {
