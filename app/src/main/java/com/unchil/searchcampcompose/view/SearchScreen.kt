@@ -69,7 +69,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState", "MissingPermission")
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SearchScreen(){
 
@@ -125,6 +125,7 @@ fun SearchScreen(){
         val fusedLocationProviderClient = remember {
             LocationServices.getFusedLocationProviderClient(context)
         }
+
         var isConnected by remember { mutableStateOf(context.checkInternetConnected()) }
 
         LaunchedEffect(key1 = isConnected) {
@@ -159,15 +160,12 @@ fun SearchScreen(){
                     }
                 }
 
-
                 viewModel.onEvent(
                     SearchScreenViewModel.Event.RecvGoCampingData(
                         GoCampingService.CAMPSITE
                     )
                 )
-
             }
-
 
             viewModel.onEvent(
                 SearchScreenViewModel.Event.Search(
@@ -177,8 +175,6 @@ fun SearchScreen(){
                 )
             )
 
-
-
             viewModel.effect.collect {
                 when (it) {
                     is SearchScreenViewModel.Effect.QueryResultCount -> {
@@ -187,7 +183,6 @@ fun SearchScreen(){
                         }.channel)
 
                     }
-
                     else -> {}
                 }
             }
@@ -255,7 +250,7 @@ fun SearchScreen(){
             }
         }
 
-        val onSearchEventHandler: (siDoCode: String, siDo:String,  siGunGuName: String, siteName: String?) -> Unit =
+        val onSearchEventHandler:(siDoCode: String, siDo:String,  siGunGuName: String, siteName: String?) -> Unit =
             { siDoCode, siDoName, siGunGuName, siteName ->
                 administrativeDistrictSiDoCode = siDoCode
                 administrativeDistrictSiDo = siDoName
@@ -296,6 +291,91 @@ fun SearchScreen(){
             }
         }
 
+        val appBar: @Composable () -> Unit = {
+            TopAppBar(
+                title = {
+
+                    val text = if( administrativeDistrictSiDoCode.equals("0")) {
+                        "${administrativeDistrictSiDo}\n${context.getString(R.string.mainmenu_result)} ${currentListDataCntStateFlow.value} 건"
+                    }else {
+                        "${administrativeDistrictSiDo} ${administrativeDistrictSiGunGu}\n${context.getString(R.string.mainmenu_result)} ${currentListDataCntStateFlow.value} 건"
+                    }
+
+                    Text(
+                        text =  text,
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 80.dp),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+
+                    IconButton(
+                        onClick = {
+                            if (scaffoldState.isConcealed) {
+                                coroutineScope.launch { scaffoldState.reveal() }
+
+                            } else {
+                                coroutineScope.launch { scaffoldState.conceal() }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.TravelExplore,
+                            contentDescription = "Localized description",
+                            tint = MaterialTheme.colorScheme.onTertiary
+                        )
+                    }
+
+                },
+                actions = {
+
+                },
+                elevation = 2.dp,
+                backgroundColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.onTertiary
+            )
+        }
+
+        val backLayerContent: @Composable () -> Unit = {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+
+                ResultNavScreen(viewModel = viewModel){
+                    if(scaffoldState.isConcealed){
+                        coroutineScope.launch { scaffoldState.reveal() }
+                    }else{
+                        coroutineScope.launch { scaffoldState.conceal() }
+                    }
+                }
+
+                AnimatedVisibility(visible = !isConnected) {
+                    ChkNetWork(onCheckState = {
+                        coroutineScope.launch {
+                            isConnected = context.checkInternetConnected()
+                        }
+                    })
+                }
+
+            }
+        }
+
+        val frontLayerContent: @Composable () -> Unit = {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                SearchCampView(
+                    onSearchEventHandler = onSearchEventHandler
+                )
+            }
+        }
 
         BackdropScaffold(
             scaffoldState = scaffoldState,
@@ -317,101 +397,10 @@ fun SearchScreen(){
                     )
                 }
             },
-            appBar = {
-                    TopAppBar(
-                        title = {
-
-                            val text = if( administrativeDistrictSiDoCode.equals("0")) {
-                                "${administrativeDistrictSiDo}\n${context.getString(R.string.mainmenu_result)} ${currentListDataCntStateFlow.value} 건"
-                            }else {
-                                "${administrativeDistrictSiDo} ${administrativeDistrictSiGunGu}\n${context.getString(R.string.mainmenu_result)} ${currentListDataCntStateFlow.value} 건"
-                            }
-
-                            Text(
-                                text =  text,
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 80.dp),
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        },
-                        navigationIcon = {
-
-                            IconButton(
-                                onClick = {
-                                    if (scaffoldState.isConcealed) {
-                                        coroutineScope.launch { scaffoldState.reveal() }
-
-                                    } else {
-                                        coroutineScope.launch { scaffoldState.conceal() }
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Default.TravelExplore,
-                                    contentDescription = "Localized description",
-                                    tint = MaterialTheme.colorScheme.onTertiary
-                                )
-                            }
-
-                        },
-                        actions = {
-
-                        },
-                        elevation = 2.dp,
-                        backgroundColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    )
-
-
-
-            },
-            backLayerContent = {
-
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-
-
-                    ResultNavScreen(viewModel = viewModel){
-                        if(scaffoldState.isConcealed){
-                            coroutineScope.launch { scaffoldState.reveal() }
-                        }else{
-                            coroutineScope.launch { scaffoldState.conceal() }
-                        }
-                    }
-
-                    AnimatedVisibility(visible = !isConnected) {
-                        ChkNetWork(onCheckState = {
-                            coroutineScope.launch {
-                                isConnected = context.checkInternetConnected()
-                            }
-                        })
-                    }
-
-                }
-
-
-            },
-            frontLayerContent = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.TopCenter,
-                ) {
-                    SearchCampView(
-                        onSearchEventHandler = onSearchEventHandler
-                    )
-                }
-            }
+            appBar = appBar,
+            backLayerContent = backLayerContent,
+            frontLayerContent = frontLayerContent
         )
-
-
-
-
-
     }
 
 }
@@ -446,11 +435,9 @@ fun PrevSearchScreenNew(){
         }
     }
 
-
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun BackDropScaffoldTest(){
 
