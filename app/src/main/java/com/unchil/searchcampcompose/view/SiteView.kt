@@ -103,10 +103,8 @@ import com.unchil.searchcampcompose.ui.theme.SearchCampTheme
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
 import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("UnrememberedMutableState")
-@OptIn( ExperimentalPermissionsApi::class,
-    ExperimentalFoundationApi::class
-)
 @Composable
 fun SiteDefaultView(
     siteData:SiteDefaultData,
@@ -146,7 +144,6 @@ fun SiteDefaultView(
                     indication = rememberRipple(bounded = true),
                     onClick = onClick
                 )
-
                  */
                 .fillMaxWidth()
                 .height(170.dp)
@@ -208,8 +205,6 @@ fun SiteDefaultView(
                         horizontalAlignment = Alignment.Start
                     ){
 
-
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -236,8 +231,6 @@ fun SiteDefaultView(
 
                         }
 
-
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -251,8 +244,6 @@ fun SiteDefaultView(
                                 contentDescription = "Cottage",
                                 modifier = Modifier.scale(0.7f)
                             )
-
-
 
                             Text(
                                 text =  siteData.induty,
@@ -278,9 +269,6 @@ fun SiteDefaultView(
                                 contentDescription = "NaturePeople",
                                 modifier = Modifier.scale(0.7f)
                             )
-
-
-
 
                             Text(
                                 text =  siteData.facltDivNm,
@@ -362,9 +350,7 @@ fun SiteDefaultView(
 fun SiteIntroductionView(
     siteData:SiteDefaultData
 ){
-
     val scrollState = rememberScrollState()
-
     val configuration = LocalConfiguration.current
     var isPortrait by remember { mutableStateOf(false) }
     isPortrait = when (configuration.orientation) {
@@ -391,9 +377,7 @@ fun SiteIntroductionView(
         }
     }
 
-
     val hapticFeedback = LocalHapticFeedback.current
-
     var isHapticProcessing by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = isHapticProcessing) {

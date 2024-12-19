@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.TravelExplore
 import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -346,7 +344,6 @@ fun SearchScreen(){
                 modifier = Modifier.fillMaxSize()
             ) {
 
-
                 ResultNavScreen(viewModel = viewModel){
                     if(scaffoldState.isConcealed){
                         coroutineScope.launch { scaffoldState.reveal() }
@@ -412,12 +409,6 @@ fun SearchScreen(){
 @Composable
 fun PrevSearchScreenNew(){
 
-    /*
-    val context = LocalContext.current
-    val permissionsManager = PermissionsManager()
-    val searchCampDB = SearchCampDB.getInstance(context.applicationContext)
-*/
-
     SearchCampTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -425,13 +416,7 @@ fun PrevSearchScreenNew(){
         ) {
 
             BackDropScaffoldTest()
-/*
-            CompositionLocalProvider(LocalPermissionsManager provides permissionsManager) {
-                CompositionLocalProvider(LocalSearchCampDB provides searchCampDB) {
-                    SearchScreen()
-                }
-            }
- */
+
         }
     }
 
