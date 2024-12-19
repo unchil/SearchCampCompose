@@ -16,14 +16,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.net.toUri
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.web.*
-import com.unchil.searchcampcompose.BuildConfig
+import com.google.accompanist.web.AccompanistWebChromeClient
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewNavigator
+import com.google.accompanist.web.rememberWebViewState
 import com.unchil.searchcampcompose.shared.LocalPermissionsManager
 import com.unchil.searchcampcompose.shared.PermissionsManager
 import com.unchil.searchcampcompose.shared.checkInternetConnected
@@ -32,7 +33,6 @@ import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
 import com.unchil.searchcampcompose.ui.theme.SearchCampTheme
 import kotlinx.coroutines.delay
 import java.net.URLDecoder
-import java.net.URLEncoder
 
 
 @OptIn(ExperimentalPermissionsApi::class)

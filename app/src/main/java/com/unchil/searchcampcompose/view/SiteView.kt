@@ -101,7 +101,6 @@ import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
 import com.unchil.searchcampcompose.shared.view.PhotoPreview
 import com.unchil.searchcampcompose.ui.theme.SearchCampTheme
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @SuppressLint("UnrememberedMutableState")

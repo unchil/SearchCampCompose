@@ -3,7 +3,6 @@ package com.unchil.searchcampcompose.shared
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.compose.foundation.Image
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.maps.model.LatLng
 import com.unchil.searchcampcompose.LocalUsableDarkMode
 import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.shared.view.CheckPermission

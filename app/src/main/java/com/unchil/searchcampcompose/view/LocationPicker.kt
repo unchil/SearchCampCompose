@@ -2,7 +2,6 @@ package com.unchil.searchcampcompose.view
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +36,6 @@ import com.unchil.searchcampcompose.db.entity.SiDo_TBL
 import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
 import com.unchil.searchcampcompose.model.VWorldService
 import com.unchil.searchcampcompose.shared.hapticProcessing
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 

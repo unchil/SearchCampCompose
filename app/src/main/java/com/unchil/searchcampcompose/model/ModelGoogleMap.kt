@@ -9,31 +9,32 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.android.gms.maps.model.LatLng
 
 
-enum class MapTypeMenu {
-    NORMAL,TERRAIN,HYBRID
-}
 
-val MapTypeMenuList = listOf(
-    MapTypeMenu.NORMAL,
-    MapTypeMenu.TERRAIN,
-    MapTypeMenu.HYBRID,
-
+object MapTypeMenuData {
+    enum class Type {
+        NORMAL,TERRAIN, HYBRID
+    }
+    val Types = listOf(
+        Type.NORMAL,
+        Type.TERRAIN,
+        Type.HYBRID,
     )
-
-fun MapTypeMenu.getDesc():Pair<ImageVector, ImageVector?> {
-    return when(this){
-        MapTypeMenu.NORMAL -> {
-            Pair( Icons.Outlined.Map, null)
-
-        }
-        MapTypeMenu.TERRAIN -> {
-            Pair( Icons.Outlined.Forest, null)
-        }
-        MapTypeMenu.HYBRID -> {
-            Pair( Icons.Outlined.Public, null)
+    fun desc(type:Type):Pair<ImageVector, ImageVector?> {
+        return when(type){
+            Type.TERRAIN -> {
+                Pair( Icons.Outlined.Forest, null)
+            }
+            Type.NORMAL -> {
+                Pair( Icons.Outlined.Map, null)
+            }
+            Type.HYBRID -> {
+                Pair( Icons.Outlined.Public, null)
+            }
         }
     }
 }
+
+
 
 fun Location.toLatLng(): LatLng {
     return LatLng(this.latitude, this.longitude)

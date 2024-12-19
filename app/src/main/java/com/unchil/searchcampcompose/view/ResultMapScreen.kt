@@ -9,6 +9,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -76,15 +78,13 @@ import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.model.GoCampingService
-import com.unchil.searchcampcompose.model.MapTypeMenuList
+import com.unchil.searchcampcompose.model.MapTypeMenuData
 import com.unchil.searchcampcompose.model.SiteDefaultData
-import com.unchil.searchcampcompose.model.getDesc
 import com.unchil.searchcampcompose.model.toLatLng
 import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.chromeIntent
 import com.unchil.searchcampcompose.shared.hapticProcessing
-
 import com.unchil.searchcampcompose.shared.view.CheckPermission
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
@@ -99,7 +99,6 @@ import kotlinx.coroutines.launch
 fun ResultMapScreen(
     viewModel: SearchScreenViewModel
 ){
-
 
     val permissions = listOf(
         Manifest.permission.INTERNET,
@@ -339,68 +338,55 @@ fun ResultMapScreen(
 
         }
 
-
-        BottomSheetScaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
-            scaffoldState = scaffoldState,
-            sheetPeekHeight = sheetPeekHeightValue,
-            sheetShape = ShapeDefaults.Small,
-            sheetDragHandle = {
-                Box(
+        val sheetDragHandle: @Composable (() -> Unit)? = {
+            Box(
+                modifier = Modifier
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.tertiary),
+                contentAlignment = Alignment.Center
+            ) {
+                /*
+                Icon(
                     modifier = Modifier
-                        .height(60.dp)
-                        .fillMaxWidth()
-                        .background(color = MaterialTheme.colorScheme.tertiary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    /*
-                    Icon(
-                        modifier = Modifier
-                            .scale(1f)
-                            .clickable {
-                                dragHandlerAction.invoke()
-                            },
-                        imageVector =
-                        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded)
-                            Icons.Outlined.KeyboardArrowDown
-                        else Icons.Outlined.KeyboardArrowUp,
-                        contentDescription = "SiteDetailScreen",
-                    )
+                        .scale(1f)
+                        .clickable {
+                            dragHandlerAction.invoke()
+                        },
+                    imageVector =
+                    if (scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded)
+                        Icons.Outlined.KeyboardArrowDown
+                    else Icons.Outlined.KeyboardArrowUp,
+                    contentDescription = "SiteDetailScreen",
+                )
 
-                     */
+                 */
 
-                    currentCampSiteData.value?.let {
+                currentCampSiteData.value?.let {
 
-                        Row (
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ){
+                    Row (
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
 
-                            Text(
-                                text = it.facltNm,
-                                modifier = Modifier.padding(vertical = 2.dp),
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                        Text(
+                            text = it.facltNm,
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                            if(it.homepage.isNotEmpty()){
-                                IconButton(onClick = {  chromeIntent.invoke(context, it.homepage)  }    ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Home,
-                                        contentDescription = "홈페이지",
-                                        modifier = Modifier,
-                                        tint = MaterialTheme.colorScheme.onTertiary
-                                    )
-                                }
+                        if(it.homepage.isNotEmpty()){
+                            IconButton(onClick = {  chromeIntent.invoke(context, it.homepage)  }    ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Home,
+                                    contentDescription = "홈페이지",
+                                    modifier = Modifier,
+                                    tint = MaterialTheme.colorScheme.onTertiary
+                                )
                             }
-
-
-
-
                         }
 
 
@@ -409,28 +395,33 @@ fun ResultMapScreen(
                     }
 
 
+
+
                 }
-            },
-            sheetContent = {
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(1f),
-                    contentAlignment = Alignment.Center
 
-                ) {
-                    currentCampSiteData.value?.let {
-                        if (isFirstTab) {
-                            SiteIntroductionView(it)
-                        } else {
-                            SiteImagePagerView(viewModel = viewModel)
-                        }
+            }
+        }
+
+        val sheetContent: @Composable() (ColumnScope.() -> Unit) = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(1f),
+                contentAlignment = Alignment.Center
+
+            ) {
+                currentCampSiteData.value?.let {
+                    if (isFirstTab) {
+                        SiteIntroductionView(it)
+                    } else {
+                        SiteImagePagerView(viewModel = viewModel)
                     }
                 }
             }
-        ) { innerPadding ->
+        }
 
+        val content: @Composable (PaddingValues) -> Unit = { innerPadding ->
             Box(
                 modifier = Modifier.padding(innerPadding),
                 contentAlignment = Alignment.Center,
@@ -574,28 +565,31 @@ fun ResultMapScreen(
                             shape = ShapeDefaults.ExtraSmall
                         )
                 ) {
-                    MapTypeMenuList.forEachIndexed { index, it ->
+
+
+                    MapTypeMenuData.Types.forEachIndexed { index, menuType ->
                         AnimatedVisibility(
                             visible = true,
                         ) {
-                            IconButton(
-                                onClick = {
-                                    hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
-                                    val mapType = MapType.values().first { mapType ->
-                                        mapType.name == it.name
-                                    }
-                                    mapProperties = mapProperties.copy(mapType = mapType)
-                                    mapTypeIndex = index
+                            IconButton(onClick = {
+                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
+                                val findType = MapType.entries.first { item ->
+                                    item.name == menuType.name
+                                }
+                                mapProperties = mapProperties.copy(mapType = findType)
+                                mapTypeIndex = index
 
-                                }) {
+                            }) {
 
                                 Icon(
-                                    imageVector = it.getDesc().first,
-                                    contentDescription = it.name,
+                                    imageVector = MapTypeMenuData.desc(menuType).first,
+                                    contentDescription = menuType.name,
                                 )
                             }
                         }
                     }
+
+
                 }
 
 
@@ -638,10 +632,20 @@ fun ResultMapScreen(
 
 
             }
+        }
 
 
-
-        }//BottomSheetScaffold
+        BottomSheetScaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding(),
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = sheetPeekHeightValue,
+            sheetShape = ShapeDefaults.Small,
+            sheetDragHandle = sheetDragHandle,
+            sheetContent = sheetContent,
+            content = content
+        )//BottomSheetScaffold
 
 
     }// permission
