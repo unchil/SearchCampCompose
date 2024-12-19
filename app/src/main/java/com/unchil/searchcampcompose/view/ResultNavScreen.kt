@@ -55,6 +55,7 @@ import com.unchil.searchcampcompose.model.SnackBarChannelType
 import com.unchil.searchcampcompose.model.snackbarChannelList
 import com.unchil.searchcampcompose.navigation.SearchCampDestinations
 import com.unchil.searchcampcompose.navigation.resultScreens
+import com.unchil.searchcampcompose.shared.hapticProcessing
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -99,15 +100,6 @@ fun ResultNavScreen(
     val isUsableHaptic = LocalUsableHaptic.current
     val hapticFeedback = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
-
-    fun hapticProcessing(){
-        if(isUsableHaptic){
-            coroutineScope.launch {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-        }
-    }
-
     val currentListDataCntStateFlow = viewModel.currentListDataCntStateFlow.collectAsState()
 
     var selectedScreen by rememberSaveable { mutableIntStateOf(0) }
@@ -133,7 +125,7 @@ fun ResultNavScreen(
 
             when (result) {
                 SnackbarResult.ActionPerformed -> {
-                    //     hapticProcessing()
+
                     //----------
                     when (channelData.channelType) {
                         SnackBarChannelType.SEARCH_RESULT -> {
@@ -145,7 +137,6 @@ fun ResultNavScreen(
                 }
 
                 SnackbarResult.Dismissed -> {
-                    //      hapticProcessing()
 
                 }
             }
@@ -194,7 +185,7 @@ fun ResultNavScreen(
                             alwaysShowLabel = true,
                             selected = selectedScreen == index,
                             onClick = {
-                                hapticProcessing()
+                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                 selectedScreen = index
 
                             },
@@ -308,7 +299,7 @@ fun ResultNavScreen(
                                 alwaysShowLabel = true,
                                 selected = selectedScreen == index,
                                 onClick = {
-                                    hapticProcessing()
+                                    hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                     selectedScreen = index
                                 },
 

@@ -94,8 +94,11 @@ import com.unchil.searchcampcompose.model.SiteDefaultData
 import com.unchil.searchcampcompose.model.getDesc
 import com.unchil.searchcampcompose.shared.LocalPermissionsManager
 import com.unchil.searchcampcompose.shared.PermissionsManager
+import com.unchil.searchcampcompose.shared.hapticProcessing
 import com.unchil.searchcampcompose.shared.view.CheckPermission
+import com.unchil.searchcampcompose.shared.view.ImageViewer
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
+import com.unchil.searchcampcompose.shared.view.PhotoPreview
 import com.unchil.searchcampcompose.ui.theme.SearchCampTheme
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.launch
@@ -336,23 +339,15 @@ fun SiteDefaultView(
                                 style = MaterialTheme.typography.bodySmall
                             )
 
-
                         }
 
-
-
                     }
-
-
 
                     PhotoPreview(
                         data = if(siteData.firstImageUrl.isNotEmpty()){siteData.firstImageUrl} else {
                             R.drawable.forest} ,
-                        allowHardware = allowHardware,
                         onClick = onClickPhoto,
                     )
-
-
                 }
             }
         }
@@ -725,13 +720,7 @@ fun SiteImagePagerView(
                     val hapticFeedback = LocalHapticFeedback.current
                     val coroutineScope = rememberCoroutineScope()
 
-                    fun hapticProcessing(){
-                        if(isUsableHaptic){
-                            coroutineScope.launch {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                            }
-                        }
-                    }
+
 
                     var isVisibleImage by remember{ mutableStateOf(false) }
                     var imageUrl by remember { mutableStateOf("") }
@@ -741,12 +730,6 @@ fun SiteImagePagerView(
                         initialPageOffsetFraction = 0f,
                         pageCount = {  result.dataList.size } )
 
-                    /*
-                    LaunchedEffect(key1 = pagerState.currentPage ){
-                        hapticProcessing()
-                    }
-
-                     */
 
                     Box (
                         modifier = Modifier
@@ -795,12 +778,12 @@ fun SiteImagePagerView(
                                         }
                                         .combinedClickable(
                                             onLongClick = {
-                                                hapticProcessing()
+                                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                                 isVisibleImage = true
                                                 imageUrl = result.dataList[page].imageUrl
                                             },
                                             onClick = {
-                                                hapticProcessing()
+                                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                                 isVisibleImage = true
                                                 imageUrl = result.dataList[page].imageUrl
                                             }
@@ -864,12 +847,12 @@ fun SiteImagePagerView(
                                         }
                                         .combinedClickable(
                                             onLongClick = {
-                                                hapticProcessing()
+                                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                                 isVisibleImage = true
                                                 imageUrl = result.dataList[page].imageUrl
                                             },
                                             onClick = {
-                                                hapticProcessing()
+                                                hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                                 isVisibleImage = true
                                                 imageUrl = result.dataList[page].imageUrl
                                             }
@@ -909,7 +892,7 @@ fun SiteImagePagerView(
                                     .fillMaxSize()
                                     .background(color = MaterialTheme.colorScheme.background)
                                     .clickable {
-                                        hapticProcessing()
+                                        hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                         isVisibleImage = false
                                     }
                             ) {

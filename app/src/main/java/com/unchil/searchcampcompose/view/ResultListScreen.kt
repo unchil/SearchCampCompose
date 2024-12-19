@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -73,7 +74,9 @@ import com.unchil.searchcampcompose.model.SiteDefaultData
 import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.chromeIntent
+import com.unchil.searchcampcompose.shared.hapticProcessing
 import com.unchil.searchcampcompose.shared.view.CheckPermission
+import com.unchil.searchcampcompose.shared.view.ImageViewer
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
 import kotlinx.coroutines.delay
@@ -103,13 +106,7 @@ fun UpButton(
     val hapticFeedback = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
 
-    fun hapticProcessing(){
-        if(isUsableHaptic){
-            coroutineScope.launch {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-        }
-    }
+
 
     if( showButton) {
         FloatingActionButton(
@@ -122,7 +119,7 @@ fun UpButton(
                     } else {
                         ( listState as LazyGridState).animateScrollToItem(0)
                     }
-                    hapticProcessing()
+                    hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                 }
             }
         ) {
@@ -137,8 +134,6 @@ fun UpButton(
     }
 
 }
-
-
 
 @Composable
 fun SearchingProgressIndicator(
@@ -157,18 +152,12 @@ fun SearchingProgressIndicator(
 
 @Composable
 fun ErrorProgressView(){
-
     Box(modifier = Modifier.fillMaxSize()) {
         Text( "Error",
             modifier = Modifier.align(Alignment.Center)
         )
     }
-
 }
-
-
-
-
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
@@ -176,18 +165,12 @@ fun ErrorProgressView(){
 fun ResultListScreen(
     viewModel: SearchScreenViewModel
 ){
-
     val permissions = listOf(
         Manifest.permission.INTERNET,
     )
-
     val multiplePermissionsState = rememberMultiplePermissionsState( permissions)
-
     CheckPermission(multiplePermissionsState = multiplePermissionsState)
-
     var isGranted by mutableStateOf(true)
-
-    val  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
     permissions.forEach { chkPermission ->
         isGranted =   isGranted && multiplePermissionsState.permissions.find { it.permission == chkPermission  }?.status?.isGranted ?: false
@@ -197,27 +180,11 @@ fun ResultListScreen(
         isGranted = isGranted,
         multiplePermissions = permissions
     ) {
-
         val campSiteStream = viewModel.campSiteListPaging.collectAsLazyPagingItems()
-
-
         var isLoading by remember { mutableStateOf(true) }
-
         val isUsableHaptic = LocalUsableHaptic.current
         val hapticFeedback = LocalHapticFeedback.current
         val coroutineScope = rememberCoroutineScope()
-
-
-        fun hapticProcessing(){
-            if(isUsableHaptic){
-                coroutineScope.launch {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                }
-            }
-        }
-
-
-
 
         val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState =  SheetState(
             skipPartiallyExpanded = false,
@@ -228,9 +195,6 @@ fun ResultListScreen(
 
         val currentCampSiteData: MutableState<SiteDefaultData?> = remember { mutableStateOf(null) }
         val sheetPeekHeightValue by remember { mutableStateOf(0.dp) }
-
-
-
         val dragHandlerAction:()->Unit = {
             coroutineScope.launch {
                 if (scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded) {
@@ -239,35 +203,250 @@ fun ResultListScreen(
                     scaffoldState.bottomSheetState.partialExpand()
                 }
             }
-
         }
+        val context = LocalContext.current
+        val sheetDragHandle: @Composable (() -> Unit)? = {
+            Box(
+                modifier = Modifier
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.tertiary),
+                contentAlignment = Alignment.Center
+            ) {
 
+                currentCampSiteData.value?.let {
+
+                    Row (
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ){
+
+                        Text(
+                            text = it.facltNm,
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        if(it.homepage.isNotEmpty()){
+                            IconButton(onClick = {  chromeIntent.invoke(context, it.homepage)  }    ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Home,
+                                    contentDescription = "홈페이지",
+                                    modifier = Modifier,
+                                    tint = MaterialTheme.colorScheme.onTertiary
+                                )
+                            }
+                        }
+
+
+
+
+                    }
+
+                }
+
+            }
+        }
+        var isFirstTab by remember {mutableStateOf(true)}
+        val sheetContent: @Composable (ColumnScope.() -> Unit) = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(1f),
+                contentAlignment = Alignment.Center
+
+            ) {
+                currentCampSiteData.value?.let {
+                    if (isFirstTab) {
+                        SiteIntroductionView(it)
+                    } else {
+                        SiteImagePagerView(viewModel = viewModel )
+                    }
+                }
+            }
+        }
+        var isPortrait by remember { mutableStateOf(false) }
+        val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
+        val lazyGridState = rememberLazyGridState(initialFirstVisibleItemIndex = 0)
+        var isConnected by remember { mutableStateOf(context.checkInternetConnected()) }
+        val onClickHandler: (data: SiteDefaultData) -> Unit = {
+            isConnected = context.checkInternetConnected()
+            currentCampSiteData.value = it
+            isFirstTab = true
+            dragHandlerAction.invoke()
+            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
+        }
+        val onClickPhotoHandler: (data: SiteDefaultData) -> Unit = {
+            isConnected = context.checkInternetConnected()
+            viewModel.onEvent(SearchScreenViewModel.Event.InitRecvSiteImageList)
+            currentCampSiteData.value = it
+            isFirstTab = false
+            dragHandlerAction.invoke()
+            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
+
+            viewModel.onEvent(
+                SearchScreenViewModel.Event.RecvGoCampingData(
+                    servicetype = GoCampingService.SITEIMAGE,
+                    contentId = it.contentId
+                )
+            )
+        }
+        val content: @Composable (PaddingValues) -> Unit = { innerPadding ->
+            Box(
+                modifier = Modifier.padding(innerPadding),
+                contentAlignment = Alignment.Center,
+            ) {
+
+
+                if (isPortrait) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter),
+                        state = lazyListState,
+                        userScrollEnabled = true,
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(
+                            horizontal = 0.dp,
+                            vertical = 1.dp
+                        )
+                    ) {
+
+                        items(campSiteStream.itemCount) {
+
+                            campSiteStream[it]?.let {
+
+                                val siteDefaultData =
+                                    CampSite_TBL.toSiteDefaultData(it)
+                                SiteDefaultView(
+                                    siteData = siteDefaultData,
+                                    onClick = {
+                                        onClickHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    },
+                                    onClickPhoto = {
+
+                                        onClickPhotoHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    },
+                                    onLongClick = {
+
+                                        onClickHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    }
+                                )
+
+                                Spacer(modifier = Modifier.padding(bottom = 1.dp))
+
+                            }
+
+
+                        }
+
+                    }
+
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter),
+                        state = lazyGridState,
+                        userScrollEnabled = true,
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Center,
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,
+                            vertical = 2.dp
+                        )
+                    ) {
+
+                        items(campSiteStream.itemCount) {
+
+                            campSiteStream[it]?.let {
+
+                                val siteDefaultData =
+                                    CampSite_TBL.toSiteDefaultData(it)
+                                SiteDefaultView(
+                                    siteData = siteDefaultData,
+                                    onClick = {
+                                        onClickHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    },
+                                    onClickPhoto = {
+                                        onClickPhotoHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    },
+                                    onLongClick = {
+                                        onClickHandler.invoke(
+                                            siteDefaultData
+                                        )
+                                    }
+                                )
+
+                                Spacer(modifier = Modifier.padding(10.dp))
+
+                            }
+
+
+                        }
+
+                    }
+                }
+
+                UpButton(
+                    modifier = Modifier
+                        .padding(end = 10.dp, bottom = 10.dp)
+                        .align(Alignment.BottomEnd),
+                    isPortrait= isPortrait,
+                    listState = if(isPortrait) lazyListState else lazyGridState
+                )
+
+                if(campSiteStream.itemCount == 0) {
+                    ImageViewer(data = R.drawable.forest, size = Size.ORIGINAL)
+                }
+
+
+                if( !isConnected) {
+                    ChkNetWork(onCheckState = {
+                        coroutineScope.launch {
+                            isConnected = context.checkInternetConnected()
+                        }
+                    })
+                }
+
+
+
+
+            }// Box
+        }
 
         when (campSiteStream.loadState.source.refresh) {
             is LoadState.Error -> {
                 isLoading = false
+                SearchingProgressIndicator(false)
                 ErrorProgressView()
             }
             LoadState.Loading -> {
-           //     SearchingProgressIndicator(isLoading)
+                SearchingProgressIndicator(isLoading)
             }
             is LoadState.NotLoading -> {
 
-                val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
-                val lazyGridState = rememberLazyGridState(initialFirstVisibleItemIndex = 0)
-
-
                 isLoading = false
+                SearchingProgressIndicator(false)
 
                 val configuration = LocalConfiguration.current
-                var isPortrait by remember { mutableStateOf(false) }
+
                 isPortrait = when (configuration.orientation) {
-                    Configuration.ORIENTATION_PORTRAIT -> {
-                        true
-                    }
-                    else -> {
-                        false
-                    }
+                    Configuration.ORIENTATION_PORTRAIT -> { true }
+                    else -> { false }
                 }
 
                 var columnWidth by remember { mutableStateOf(1f) }
@@ -287,50 +466,12 @@ fun ResultListScreen(
                     }
                 }
 
-
-                val context = LocalContext.current
-
-
-
-                var isConnected by remember { mutableStateOf(context.checkInternetConnected()) }
-
-
                 LaunchedEffect(key1 = isConnected) {
                     while (!isConnected) {
                         delay(500)
                         isConnected = context.checkInternetConnected()
                     }
                 }
-
-
-                var isFirstTab by remember {mutableStateOf(true)}
-
-
-                val onClickHandler: (data: SiteDefaultData) -> Unit = {
-                    isConnected = context.checkInternetConnected()
-                    currentCampSiteData.value = it
-                    isFirstTab = true
-                    dragHandlerAction.invoke()
-                    hapticProcessing()
-                }
-
-
-                val onClickPhotoHandler: (data: SiteDefaultData) -> Unit = {
-                    isConnected = context.checkInternetConnected()
-                    viewModel.onEvent(SearchScreenViewModel.Event.InitRecvSiteImageList)
-                    currentCampSiteData.value = it
-                    isFirstTab = false
-                    dragHandlerAction.invoke()
-                    hapticProcessing()
-
-                    viewModel.onEvent(
-                        SearchScreenViewModel.Event.RecvGoCampingData(
-                            servicetype = GoCampingService.SITEIMAGE,
-                            contentId = it.contentId
-                        )
-                    )
-                }
-
 
                 BottomSheetScaffold(
                     modifier = Modifier
@@ -339,234 +480,14 @@ fun ResultListScreen(
                     scaffoldState = scaffoldState,
                     sheetPeekHeight = sheetPeekHeightValue,
                     sheetShape = ShapeDefaults.Small,
-                    sheetDragHandle = {
-                        Box(
-                            modifier = Modifier
-                                .height(60.dp)
-                                .fillMaxWidth()
-                                .background(color = MaterialTheme.colorScheme.tertiary),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            currentCampSiteData.value?.let {
-
-                                Row (
-                                    horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                ){
-
-                                    Text(
-                                        text = it.facltNm,
-                                        modifier = Modifier.padding(vertical = 2.dp),
-                                        color = MaterialTheme.colorScheme.onTertiary,
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-
-                                    if(it.homepage.isNotEmpty()){
-                                        IconButton(onClick = {  chromeIntent.invoke(context, it.homepage)  }    ) {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Home,
-                                                contentDescription = "홈페이지",
-                                                modifier = Modifier,
-                                                tint = MaterialTheme.colorScheme.onTertiary
-                                            )
-                                        }
-                                    }
-
-
-
-
-                                }
-
-
-
-
-                            }
-
-                        }
-                    },
-                    sheetContent = {
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(1f),
-                            contentAlignment = Alignment.Center
-
-                        ) {
-
-
-                            currentCampSiteData.value?.let {
-                                if (isFirstTab) {
-                                    SiteIntroductionView(it)
-                                } else {
-                                    SiteImagePagerView(viewModel = viewModel )
-                                }
-                            }
-
-
-
-
-                        }
-
-
-                    }
-                ) { innerPadding ->
-
-                    Box(
-                        modifier = Modifier.padding(innerPadding),
-                        contentAlignment = Alignment.Center,
-                    ) {
-
-
-                        if (isPortrait) {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .align(Alignment.TopCenter),
-                                state = lazyListState,
-                                userScrollEnabled = true,
-                                verticalArrangement = Arrangement.SpaceBetween,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                contentPadding = PaddingValues(
-                                    horizontal = 0.dp,
-                                    vertical = 1.dp
-                                )
-                            ) {
-
-                                items(campSiteStream.itemCount) {
-
-                                    campSiteStream[it]?.let {
-
-                                        val siteDefaultData =
-                                            CampSite_TBL.toSiteDefaultData(it)
-                                        SiteDefaultView(
-                                            siteData = siteDefaultData,
-                                            onClick = {
-                                                onClickHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            },
-                                            onClickPhoto = {
-
-                                                onClickPhotoHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            },
-                                            onLongClick = {
-
-                                                onClickHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            }
-                                        )
-
-                                        Spacer(modifier = Modifier.padding(bottom = 1.dp))
-
-                                    }
-
-
-                                }
-
-                            }
-
-                        } else {
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                modifier = Modifier
-                                    .align(Alignment.TopCenter),
-                                state = lazyGridState,
-                                userScrollEnabled = true,
-                                verticalArrangement = Arrangement.SpaceBetween,
-                                horizontalArrangement = Arrangement.Center,
-                                contentPadding = PaddingValues(
-                                    horizontal = 2.dp,
-                                    vertical = 2.dp
-                                )
-                            ) {
-
-                                items(campSiteStream.itemCount) {
-
-                                    campSiteStream[it]?.let {
-
-                                        val siteDefaultData =
-                                            CampSite_TBL.toSiteDefaultData(it)
-                                        SiteDefaultView(
-                                            siteData = siteDefaultData,
-                                            onClick = {
-                                                onClickHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            },
-                                            onClickPhoto = {
-                                                onClickPhotoHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            },
-                                            onLongClick = {
-                                                onClickHandler.invoke(
-                                                    siteDefaultData
-                                                )
-                                            }
-                                        )
-
-                                        Spacer(modifier = Modifier.padding(10.dp))
-
-                                    }
-
-
-                                }
-
-                            }
-                        }
-
-                        UpButton(
-                            modifier = Modifier
-                                .padding(end = 10.dp, bottom = 10.dp)
-                                .align(Alignment.BottomEnd),
-                            isPortrait= isPortrait,
-                            listState = if(isPortrait) lazyListState else lazyGridState
-                        )
-
-
-
-
-                        if(campSiteStream.itemCount == 0) {
-                            ImageViewer(data = R.drawable.forest, size = Size.ORIGINAL)
-                        }
-
-
-                        if( !isConnected) {
-                            ChkNetWork(onCheckState = {
-                                coroutineScope.launch {
-                                    isConnected = context.checkInternetConnected()
-                                }
-                            })
-                        }
-
-
-
-
-                    }// Box
-
-                }// BottomSheetScaffold
-
-
-
-
+                    sheetDragHandle = sheetDragHandle,
+                    sheetContent = sheetContent,
+                    content = content
+                )// BottomSheetScaffold
 
             }
 
-
         }// when
-
-
-
-
-
     }
-
-
 
 }

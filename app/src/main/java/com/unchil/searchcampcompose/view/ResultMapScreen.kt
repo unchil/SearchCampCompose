@@ -45,7 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -77,10 +76,15 @@ import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.db.LocalSearchCampDB
 import com.unchil.searchcampcompose.db.entity.CampSite_TBL
 import com.unchil.searchcampcompose.model.GoCampingService
+import com.unchil.searchcampcompose.model.MapTypeMenuList
 import com.unchil.searchcampcompose.model.SiteDefaultData
+import com.unchil.searchcampcompose.model.getDesc
+import com.unchil.searchcampcompose.model.toLatLng
 import com.unchil.searchcampcompose.shared.ChkNetWork
 import com.unchil.searchcampcompose.shared.checkInternetConnected
 import com.unchil.searchcampcompose.shared.chromeIntent
+import com.unchil.searchcampcompose.shared.hapticProcessing
+
 import com.unchil.searchcampcompose.shared.view.CheckPermission
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
@@ -171,17 +175,6 @@ fun ResultMapScreen(
         }
 
          */
-
-
-        fun hapticProcessing(){
-            if(isUsableHaptic){
-                coroutineScope.launch {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                }
-            }
-        }
-
-
 
         val fusedLocationProviderClient = remember {
             LocationServices.getFusedLocationProviderClient(context)
@@ -325,7 +318,7 @@ fun ResultMapScreen(
             currentCampSiteData.value = it
             isFirstTab = true
             dragHandlerAction.invoke()
-            hapticProcessing()
+            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
         }
 
 
@@ -335,7 +328,7 @@ fun ResultMapScreen(
             currentCampSiteData.value = it
             isFirstTab = false
             dragHandlerAction.invoke()
-            hapticProcessing()
+            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
 
             viewModel.onEvent(
                 SearchScreenViewModel.Event.RecvGoCampingData(
@@ -526,7 +519,7 @@ fun ResultMapScreen(
 
                     IconButton(
                         onClick = {
-                            hapticProcessing()
+                            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                             isDarkMode = !isDarkMode
                             if (isDarkMode) {
                                 mapProperties = mapProperties.copy(
@@ -550,7 +543,7 @@ fun ResultMapScreen(
 
                     IconButton(
                         onClick = {
-                            hapticProcessing()
+                            hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                             isGoCampSiteLocation = true
                         }
                     ) {
@@ -587,7 +580,7 @@ fun ResultMapScreen(
                         ) {
                             IconButton(
                                 onClick = {
-                                    hapticProcessing()
+                                    hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
                                     val mapType = MapType.values().first { mapType ->
                                         mapType.name == it.name
                                     }

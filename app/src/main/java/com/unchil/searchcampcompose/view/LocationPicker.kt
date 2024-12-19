@@ -37,6 +37,7 @@ import com.unchil.searchcampcompose.LocalUsableHaptic
 import com.unchil.searchcampcompose.db.entity.SiDo_TBL
 import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
 import com.unchil.searchcampcompose.model.VWorldService
+import com.unchil.searchcampcompose.shared.hapticProcessing
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -71,13 +72,8 @@ fun AdministrativeDistrictPicker(
     val hapticFeedback = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
 
-    fun hapticProcessing(){
-        if(isUsableHaptic){
-            coroutineScope.launch{
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
-        }
-    }
+
+
 
     LaunchedEffect(key1 = pagerState.isScrollInProgress){
         if (!pagerState.isScrollInProgress){
@@ -103,7 +99,7 @@ fun AdministrativeDistrictPicker(
 
 
     LaunchedEffect(key1 = pagerState.currentPage ){
-        hapticProcessing()
+        hapticProcessing(coroutineScope, hapticFeedback, isUsableHaptic)
     }
 
 

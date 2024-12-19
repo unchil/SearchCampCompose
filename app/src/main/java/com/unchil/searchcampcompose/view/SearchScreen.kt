@@ -237,7 +237,6 @@ fun SearchScreen(){
                 )
                 when (result) {
                     SnackbarResult.ActionPerformed -> {
-                        //     hapticProcessing()
                         //----------
                         when (channelData.channelType) {
                             SnackBarChannelType.SEARCH_RESULT -> {
@@ -250,7 +249,6 @@ fun SearchScreen(){
                     }
 
                     SnackbarResult.Dismissed -> {
-                        //      hapticProcessing()
 
                     }
                 }
@@ -403,7 +401,6 @@ fun SearchScreen(){
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.TopCenter,
                 ) {
-
                     SearchCampView(
                         onSearchEventHandler = onSearchEventHandler
                     )

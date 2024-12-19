@@ -216,12 +216,14 @@ fun ImageViewer(
 }
 
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PhotoPreview(
     modifier: Modifier = Modifier,
     data:Any,
-    onPhotoPreviewTapped: (Any) -> Unit
+    onClick: (()->Unit )? = null ,
+    onLongClick:(()->Unit )? = null
 ) {
 
 
@@ -232,15 +234,19 @@ fun PhotoPreview(
             .width(100.dp)
             .border(width = 1.dp, color = Color.Black, shape = ShapeDefaults.Small)
             .clip(shape = ShapeDefaults.Small)
-            .combinedClickable { onPhotoPreviewTapped(data) }
-    ,
+            .combinedClickable(
+                onLongClick = { onLongClick?.invoke() },
+                onClick = { onClick?.invoke() }
+            )
+        ,
         contentAlignment = Alignment.Center
 
     ) {
-
-        ImageViewer(data = data, size = Size.ORIGINAL, isZoomable = false)
+        ImageViewer(data = data, size = Size(600, 600), isZoomable = false, contentScale = ContentScale.Crop)
     }
 }
+
+
 
 
 

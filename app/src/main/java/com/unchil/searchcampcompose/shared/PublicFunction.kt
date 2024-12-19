@@ -27,6 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,6 +43,8 @@ import com.unchil.searchcampcompose.LocalUsableDarkMode
 import com.unchil.searchcampcompose.R
 import com.unchil.searchcampcompose.shared.view.CheckPermission
 import com.unchil.searchcampcompose.shared.view.PermissionRequiredCompose
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 fun Context.checkInternetConnected() :Boolean  {
     ( applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).apply {
@@ -58,8 +62,18 @@ fun Context.checkInternetConnected() :Boolean  {
     }
 }
 
-fun Location.toLatLng(): LatLng {
-    return LatLng(this.latitude, this.longitude)
+
+
+fun hapticProcessing(
+    coroutineScope: CoroutineScope,
+    hapticFeedback: HapticFeedback,
+    isUsableHaptic:Boolean
+){
+    if(isUsableHaptic) {
+        coroutineScope.launch {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+    }
 }
 
 
