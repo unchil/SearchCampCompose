@@ -76,8 +76,7 @@ class SearchCampApi {
         crs:String,
     ): VWorldResponse_LT_C_ADSIGG_INFO {
         val url = "${VWORLD_URL}/data?key=${apiKey}&request=${request}&data=${data}&crs=${crs}&geomfilter=${geomfilter}&geometry=${geometry}&size=${size}"
-        val result = httpClient.get(urlString = url)
-        return result.body()
+        return httpClient.get(urlString = url).body()
     }
 
 
@@ -122,18 +121,6 @@ class SearchCampApi {
         return httpClient.get(urlString = url).body()
     }
 
-    suspend fun getSync(
-        serviceKey:String,
-        numOfRows:String,
-        pageNo:String,
-        MobileOS:String,
-        MobileApp:String,
-        _type:String,
-        syncModTime:String,
-    ):GoCampingResponse{
-        val url = "${GOCAMPING_URL}/basedSyncList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&syncModTime=${syncModTime}"
-        return httpClient.get(urlString = url).body()
-    }
 
     suspend fun getImage(
         serviceKey:String,
