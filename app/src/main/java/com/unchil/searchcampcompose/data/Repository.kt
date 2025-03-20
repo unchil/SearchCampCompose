@@ -34,6 +34,8 @@ import com.unchil.searchcampcompose.shared.UnixTimeToString
 import com.unchil.searchcampcompose.shared.yyyyMMdd
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.util.logging.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +46,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 class Repository {
 
-    private val logger = Logger.DEFAULT
+    internal val LOGGER = KtorSimpleLogger("com.unchil.searchcampcompose")
 
     lateinit var database: SearchCampDB
 
@@ -261,7 +263,7 @@ class Repository {
 
             } catch (e:Exception){
                 e.localizedMessage?.let {
-                    logger.log(it)
+                    LOGGER.error(it)
                 }
                 database.currentWeatherDao.select_Flow().collect{
                     _currentWeather.value = it
@@ -370,7 +372,7 @@ class Repository {
                     }
                 }
             }catch (e:Exception){
-                e.localizedMessage?.let { logger.log(it) }
+                e.localizedMessage?.let { LOGGER.error(it) }
             }
 
 
@@ -579,7 +581,9 @@ class Repository {
 
 
             } catch (e: Exception){
-                val errMsg = e.localizedMessage
+                e.localizedMessage?.let {
+                    LOGGER.error(it)
+                }
             } // catch
 
 
