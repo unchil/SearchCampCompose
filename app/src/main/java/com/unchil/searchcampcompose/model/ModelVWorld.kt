@@ -202,7 +202,7 @@ enum class VWorldService {
 }
 
 enum class GoCampingService {
-    CAMPSITE, NEARCAMPSITE,SEARCH,SITEIMAGE,SYNC
+    CAMPSITE, NEARCAMPSITE,SEARCH,SITEIMAGE
 }
 
 
@@ -226,6 +226,5 @@ fun GoCampingService.getPoint():String {
         GoCampingService.NEARCAMPSITE -> "/locationBasedList"
         GoCampingService.SEARCH -> "/searchList"
         GoCampingService.SITEIMAGE -> "/imageList"
-        GoCampingService.SYNC -> "/basedSyncList"
     }
 }

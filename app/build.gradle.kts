@@ -93,7 +93,6 @@ dependencies {
     implementation(libs.coil.network.ktor)
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.serialization.kotlinx.json)
@@ -101,7 +100,6 @@ dependencies {
     implementation(libs.androidx.material.icons)
 
 }
-
 
 secrets {
     // To add your Maps API key to this project:

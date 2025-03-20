@@ -180,8 +180,6 @@ data class GoCampingRecvItem (
     @SerialName("wtrplCo") var wtrplCo:String, //개수대 개수
     @SerialName("zipcode") var zipcode:String, //우편번호
 
-    @SerialName("syncStatus") var syncStatus:String? //콘덴츠 상태
-
 
 ){
     companion object{

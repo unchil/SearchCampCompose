@@ -461,17 +461,7 @@ class Repository {
                         }else {}
 
                     }
-                    GoCampingService.SYNC -> {
-                        api.getSync(
-                            serviceKey = serviceKey,
-                            numOfRows = numOfRows,
-                            pageNo = pageNo,
-                            MobileOS = MobileOS,
-                            MobileApp = MobileApp,
-                            _type = datatype,
-                            syncModTime = UnixTimeToString( (System.currentTimeMillis() ), yyyyMMdd)
-                        )
-                    }
+
                     GoCampingService.SITEIMAGE -> {
                         if (!contentId.isNullOrEmpty()) {
                             api.getImage(
@@ -507,8 +497,7 @@ class Repository {
                     it.getDesc().first == when(serviceType){
                         GoCampingService.CAMPSITE,
                         GoCampingService.NEARCAMPSITE,
-                        GoCampingService.SEARCH ,
-                        GoCampingService.SYNC-> {
+                        GoCampingService.SEARCH -> {
                             (apiResponse as GoCampingResponse).response?.header?.resultCode
                         }
                         GoCampingService.SITEIMAGE -> {
@@ -557,59 +546,7 @@ class Repository {
 
 
                             }
-                            GoCampingService.SYNC -> {
 
-                                val resultUpdateList: MutableList<CampSite_TBL> = mutableListOf()
-                                val resultAppendList: MutableList<CampSite_TBL> = mutableListOf()
-                                val resultDeleteList: MutableList<String> = mutableListOf()
-
-
-                                (apiResponse as GoCampingResponse).response?.body?.items?.item?.forEach {
-                                    when (it.syncStatus) {
-                                        GoCampingSyncStatus.A.name -> {
-                                            resultAppendList.add(
-                                                GoCampingRecvItem.toCampSite_TBL(it)
-                                            )
-                                        }
-
-                                        GoCampingSyncStatus.U.name -> {
-                                            resultUpdateList.add(
-                                                GoCampingRecvItem.toCampSite_TBL(it)
-                                            )
-                                        }
-
-                                        GoCampingSyncStatus.D.name -> {
-                                            resultDeleteList.add(
-                                                it.contentId
-                                            )
-                                        }
-
-                                        else -> {
-                                        }
-                                    }
-                                }
-
-                                database.withTransaction {
-                                    database.campSiteDao.insert_List(resultAppendList)
-                                }
-
-                                database.withTransaction {
-                                    resultUpdateList.forEach {
-                                        database.campSiteDao.delete(contentId = it.contentId)
-                                    }
-                                    database.campSiteDao.insert_List(resultUpdateList)
-                                }
-
-                                database.withTransaction {
-                                    resultDeleteList.forEach {
-                                        database.campSiteDao.delete(contentId = it)
-                                    }
-                                }
-                                database.withTransaction {
-                                    updateCollectTime(serviceType.name)
-                                }
-
-                            }
                             GoCampingService.SITEIMAGE -> {
                                 val resultList: MutableList<SiteImage_TBL> = mutableListOf()
                                 (apiResponse as GoCampingResponseImage).response?.body?.items?.item?.forEach {

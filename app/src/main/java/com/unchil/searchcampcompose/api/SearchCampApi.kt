@@ -105,7 +105,8 @@ class SearchCampApi {
         radius:String
     ):GoCampingResponse{
         val url = "${GOCAMPING_URL}/locationBasedList?serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${MobileOS}&MobileApp=${MobileApp}&_type=${_type}&mapX=${mapX}&mapY=${mapY}&radius=${radius}"
-        return httpClient.get(urlString = url).body()
+        val result = httpClient.get(urlString = url).body<GoCampingResponse>()
+        return result
     }
 
     suspend fun getSearch(
