@@ -9,39 +9,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.unchil.searchcampcompose.BuildConfig
 import com.unchil.searchcampcompose.api.SearchCampApi
 import com.unchil.searchcampcompose.db.SearchCampDB
-import com.unchil.searchcampcompose.db.entity.CURRENTWEATHER_TBL
-import com.unchil.searchcampcompose.db.entity.CampSite_TBL
-import com.unchil.searchcampcompose.db.entity.NearCampSite_TBL
-import com.unchil.searchcampcompose.db.entity.SiDo_TBL
-import com.unchil.searchcampcompose.db.entity.SiGunGu_TBL
-import com.unchil.searchcampcompose.db.entity.SiteImage_TBL
-import com.unchil.searchcampcompose.model.AdministrativeDistrictSiDoList
-import com.unchil.searchcampcompose.model.CollectType
-import com.unchil.searchcampcompose.model.CollectTypeList
-import com.unchil.searchcampcompose.model.GoCampingRecvItem
-import com.unchil.searchcampcompose.model.GoCampingResponse
-import com.unchil.searchcampcompose.model.GoCampingResponseImage
-import com.unchil.searchcampcompose.model.GoCampingResponseStatus
-import com.unchil.searchcampcompose.model.GoCampingResponseStatusList
-import com.unchil.searchcampcompose.model.GoCampingService
-import com.unchil.searchcampcompose.model.GoCampingSyncStatus
-import com.unchil.searchcampcompose.model.VWorldService
-import com.unchil.searchcampcompose.model.getCodeString
-import com.unchil.searchcampcompose.model.getDesc
-import com.unchil.searchcampcompose.model.getExtentionNameList
-import com.unchil.searchcampcompose.model.toCURRENTWEATHER_TBL
-import com.unchil.searchcampcompose.shared.UnixTimeToString
-import com.unchil.searchcampcompose.shared.yyyyMMdd
+import com.unchil.searchcampcompose.db.entity.*
+import com.unchil.searchcampcompose.model.*
 import com.unchil.searchcampcompose.viewmodel.SearchScreenViewModel
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.logging.Logger
 import io.ktor.util.logging.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-
-
 
 
 class Repository {
