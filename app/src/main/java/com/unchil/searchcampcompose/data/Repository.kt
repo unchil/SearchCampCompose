@@ -386,13 +386,14 @@ class Repository {
 
 
         } catch (e : Exception){
-
             val itemsZeroPasingErrMsg = "Expected BEGIN_OBJECT but was STRING at line 1 column 82 path"
-
             if(   e.localizedMessage?.contains(itemsZeroPasingErrMsg) ?: false  )  {
                 _recvSiteImageListState.value = SearchScreenViewModel.RecvSiteImageListState.Success(emptyList())
             } else {
-                _recvSiteImageListState.value = SearchScreenViewModel.RecvSiteImageListState.Error(GoCampingResponseStatus.SERVICETIMEOUT_ERROR)
+                LOGGER.error(e.localizedMessage)
+                e.localizedMessage?.let {
+                    _recvSiteImageListState.value = SearchScreenViewModel.RecvSiteImageListState.Error(it)
+                }
             }
         }
 

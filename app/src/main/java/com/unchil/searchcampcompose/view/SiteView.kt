@@ -661,7 +661,7 @@ fun SiteImagePagerView(
                     .fillMaxSize()
                 ) {
                     Text(
-                        text = result.responseStatus.getDesc().second,
+                        text = result.responseMessage,
                         modifier = Modifier
                             .align(Alignment.Center),
                         textAlign = TextAlign.Center

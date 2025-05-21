@@ -221,7 +221,7 @@ class SearchScreenViewModel   (
     sealed class RecvSiteImageListState {
         data class Success(val dataList: List<SiteImage_TBL>) : RecvSiteImageListState()
         object Loading: RecvSiteImageListState()
-        data class Error(val responseStatus: GoCampingResponseStatus) :  RecvSiteImageListState()
+        data class Error(val responseMessage: String) :  RecvSiteImageListState()
     }
 
 
